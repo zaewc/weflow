@@ -39,7 +39,7 @@ function buildSubmission(input: NewSubmission): Submission {
 }
 
 function sortNewestFirst(items: Submission[]): Submission[] {
-  return [...items].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 // ---------------------------------------------------------------------------
