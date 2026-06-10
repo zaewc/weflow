@@ -1,5 +1,7 @@
 # WEFLOW Web
 
+[![CI](https://github.com/zaewc/weflow/actions/workflows/ci.yml/badge.svg)](https://github.com/zaewc/weflow/actions/workflows/ci.yml)
+
 문의로 이어지는 홈페이지 — 랜딩/홈페이지 제작 · 광고 운영 · 검색 상단 노출.
 Next.js 14 (App Router) · TypeScript(strict) · Tailwind CSS.
 
@@ -44,6 +46,28 @@ npm run e2e          # E2E 테스트 (Playwright, 최초 1회 `npx playwright in
 - 경로: `/admin`
 - 키: `ADMIN_KEY` 환경변수 (미설정 시 기본값 `weflow2026`)
 - 기능: 상태(대기/진행중/완료) 변경 · 삭제 · 상세 펼침 · 섹션별/전체 엑셀(.xlsx) 다운로드 · 5초 폴링 실시간 갱신
+
+## CI/CD
+
+GitHub Actions로 구성되어 있습니다.
+
+- **CI** (`.github/workflows/ci.yml`) — `main` push / PR 시 3개 잡 병렬 실행:
+  - `quality`: lint · typecheck · build
+  - `test`: Vitest 커버리지 (100% 임계값, 미달 시 실패) — 리포트 아티팩트 업로드
+  - `e2e`: Playwright(Chromium) E2E — 실패 시 리포트 아티팩트 업로드
+- **CD** (`.github/workflows/deploy.yml`) — CI 성공 후 `main`을 Vercel 프로덕션에 배포.
+
+### 배포 Secret 설정
+
+저장소 **Settings → Secrets and variables → Actions**에 아래 3개를 등록하면 자동 배포됩니다. (없으면 배포 잡은 경고만 남기고 건너뜁니다.)
+
+| Secret | 설명 |
+| --- | --- |
+| `VERCEL_TOKEN` | Vercel 계정 토큰 (Account Settings → Tokens) |
+| `VERCEL_ORG_ID` | `vercel link` 후 `.vercel/project.json`에서 확인 |
+| `VERCEL_PROJECT_ID` | 동일 파일에서 확인 |
+
+> Vercel 대시보드의 Git 연동으로도 자동 배포가 가능합니다. 그 경우 `deploy.yml`은 비활성화(삭제)해도 됩니다.
 
 ## Vercel 배포 (영속 저장소)
 
