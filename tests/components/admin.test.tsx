@@ -175,10 +175,45 @@ describe("AdminPage dashboard", () => {
     expect(screen.getByRole("button", { name: "대기 2" })).toBeInTheDocument();
     expect(screen.getByText("예약자1")).toBeInTheDocument();
 
-    // 상세 펼치기 (문의자1 — 빈 값들이 "-"로 표시)
-    const expandButtons = screen.getAllByLabelText("상세 보기");
-    fireEvent.click(expandButtons[expandButtons.length - 1]!);
+    // 값이 있는 행 펼치기 (예약자1)
+    const filledRow = within(
+      screen.getByText("예약 관리").closest("section")!,
+    )
+      .getByText("예약자1")
+      .closest("tr")!;
+    fireEvent.click(within(filledRow).getByLabelText("상세 보기"));
+    expect(screen.getByText("홈페이지 제작")).toBeInTheDocument();
+
+    // 빈 값 행 펼치기 (문의자1 — "-" 표시) + 토글 닫기
+    const emptyRow = within(
+      screen.getByText("문의 관리").closest("section")!,
+    )
+      .getByText("문의자1")
+      .closest("tr")!;
+    const emptyToggle = within(emptyRow).getByLabelText("상세 보기");
+    fireEvent.click(emptyToggle);
     expect(screen.getAllByText("-").length).toBeGreaterThan(0);
+    // 다시 클릭 → 접힘 (delete 분기)
+    fireEvent.click(emptyToggle);
+  });
+
+  it("logs out when unmounted mid-request (alive=false branch)", async () => {
+    sessionStorage.setItem("weflow_admin_key", KEY);
+    // 지연 후 거부되는 list 요청
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        () =>
+          new Promise((_resolve, reject) => {
+            setTimeout(() => reject(new Error("late")), 0);
+          }),
+      ),
+    );
+    const { unmount } = render(<AdminPage />);
+    unmount(); // in-flight 중 언마운트 → alive=false
+    await new Promise((r) => setTimeout(r, 5));
+    // 언마운트됐으므로 storage는 그대로 (alive=false 분기로 제거 안 함)
+    expect(sessionStorage.getItem("weflow_admin_key")).toBe(KEY);
   });
 
   it("filters by status", async () => {
@@ -209,6 +244,22 @@ describe("AdminPage dashboard", () => {
     await waitFor(() =>
       expect(within(getRow()).getAllByText("완료")).toHaveLength(2),
     );
+
+    // 진행중 버튼도 동작 (다른 행)
+    const getRow2 = () =>
+      within(screen.getByText("문의 관리").closest("section")!)
+        .getByText("문의자1")
+        .closest("tr")!;
+    fireEvent.click(within(getRow2()).getByRole("button", { name: "진행중" }));
+    await waitFor(() =>
+      expect(within(getRow2()).getAllByText("진행중")).toHaveLength(2),
+    );
+
+    // 상태 변경 후 재조회 실패 → .catch(()=>undefined) 분기
+    listShouldThrow = true;
+    fireEvent.click(within(getRow()).getByRole("button", { name: "진행중" }));
+    await new Promise((r) => setTimeout(r, 5));
+    listShouldThrow = false;
   });
 
   it("deletes after confirm, keeps row when cancelled", async () => {
@@ -221,10 +272,13 @@ describe("AdminPage dashboard", () => {
     expect(screen.getByText("예약자1")).toBeInTheDocument();
 
     vi.spyOn(window, "confirm").mockReturnValue(true);
+    // 삭제 후 재조회 실패 → .catch(()=>undefined) 분기
+    listShouldThrow = true;
     fireEvent.click(within(row).getByLabelText("삭제"));
     await waitFor(() =>
       expect(screen.queryByText("예약자1")).not.toBeInTheDocument(),
     );
+    listShouldThrow = false;
   });
 
   it("downloads excel (all + section) and skips when response not ok", async () => {
@@ -237,14 +291,16 @@ describe("AdminPage dashboard", () => {
     await waitFor(() => expect(createObjectURL).toHaveBeenCalledTimes(1));
 
     const sectionBtns = screen.getAllByRole("button", { name: /엑셀 다운/ });
-    fireEvent.click(sectionBtns[0]!);
+    fireEvent.click(sectionBtns[0]!); // 예약 섹션
     await waitFor(() => expect(createObjectURL).toHaveBeenCalledTimes(2));
+    fireEvent.click(sectionBtns[1]!); // 문의 섹션
+    await waitFor(() => expect(createObjectURL).toHaveBeenCalledTimes(3));
 
     // 응답 실패 시 다운로드 스킵
     exportOk = false;
     fireEvent.click(screen.getByRole("button", { name: /전체 엑셀/ }));
     await new Promise((r) => setTimeout(r, 10));
-    expect(createObjectURL).toHaveBeenCalledTimes(2);
+    expect(createObjectURL).toHaveBeenCalledTimes(3);
   });
 
   it("manual refresh and logout", async () => {
