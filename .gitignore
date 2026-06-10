@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.DS_Store
+*.log
+.env*.local
+/data/*.json
+!/data/.gitkeep
+next-env.d.ts
+tsconfig.tsbuildinfo
+coverage
+test-results
+playwright-report
+playwright/.cache
