@@ -20,6 +20,12 @@ export const metadata: Metadata = {
 
 const STEP_ICONS = [Search, PenTool, LayoutGrid, Code2, TrendingUp, Megaphone];
 
+const STEP_CARDS = DETAIL_STEPS.map((step, i) => ({
+  ...step,
+  // STEP_ICONS와 DETAIL_STEPS는 길이가 동일하므로 항상 존재
+  Icon: STEP_ICONS[i] as (typeof STEP_ICONS)[number],
+}));
+
 export default function ServicesPage() {
   return (
     <>
@@ -38,8 +44,8 @@ export default function ServicesPage() {
       {/* 6단계 제작 진행 과정 */}
       <section className="container-w py-16">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {DETAIL_STEPS.map((step, i) => {
-            const Icon = STEP_ICONS[i] ?? Search;
+          {STEP_CARDS.map((step) => {
+            const Icon = step.Icon;
             return (
               <div
                 key={step.no}
