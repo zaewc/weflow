@@ -116,7 +116,7 @@ describe("store (file backend)", () => {
     const list = await store.listSubmissions();
     expect(list).toHaveLength(2);
     // 최신이 먼저
-    expect(list[0]?.createdAt >= (list[1]?.createdAt ?? "")).toBe(true);
+    expect(list[0]!.createdAt >= list[1]!.createdAt).toBe(true);
 
     const updated = await store.updateStatus(a.id, "done");
     expect(updated?.status).toBe("done");
