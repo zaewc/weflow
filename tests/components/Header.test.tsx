@@ -35,4 +35,14 @@ describe("Header", () => {
     fireEvent.click(mobileLinks[mobileLinks.length - 1]!);
     expect(screen.getAllByRole("link", { name: "예약" })).toHaveLength(1);
   });
+
+  it("closes the mobile menu when the diagnosis CTA is clicked", () => {
+    globalThis.__pathname = "/";
+    render(<Header />);
+    fireEvent.click(screen.getByLabelText("메뉴 열기"));
+    const ctas = screen.getAllByRole("link", { name: "무료 진단 신청" });
+    // 모바일 메뉴의 CTA 클릭 → 닫힘
+    fireEvent.click(ctas[ctas.length - 1]!);
+    expect(screen.getAllByRole("link", { name: "예약" })).toHaveLength(1);
+  });
 });
