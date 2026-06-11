@@ -6,8 +6,10 @@ export interface CaseItem {
   name: string;
   category: string;
   summary: string;
-  /** 카드 배경 그라데이션 (이미지 대체) */
+  /** 카드 배경 그라데이션 (이미지 로딩 전/폴백) */
   gradient: string;
+  /** 대표 이미지 (public 경로) */
+  image: string;
   /** 상세 지표 */
   metrics: { label: string; value: string }[];
   highlights: string[];
@@ -20,6 +22,7 @@ export const CASES: CaseItem[] = [
     category: "PT샵",
     summary: "문의 버튼 위치 최적화로 상담 문의가 확실히 늘었습니다.",
     gradient: "from-blue-500 to-indigo-600",
+    image: "/cases_PT샵.jpg",
     metrics: [
       { label: "상담 문의", value: "+180%" },
       { label: "제작 기간", value: "4일" },
@@ -36,6 +39,7 @@ export const CASES: CaseItem[] = [
     category: "필라테스",
     summary: "문의 동선이 훨씬 좋아지고 예약 문의가 안정적으로 들어옵니다.",
     gradient: "from-rose-400 to-pink-600",
+    image: "/cases_필라테스.jpg",
     metrics: [
       { label: "예약 문의", value: "+150%" },
       { label: "이탈률", value: "-32%" },
@@ -52,6 +56,7 @@ export const CASES: CaseItem[] = [
     category: "헬스장",
     summary: "디자인보다 문의 구조를 신경 써서 실제 등록으로 이어졌습니다.",
     gradient: "from-emerald-400 to-teal-600",
+    image: "/cases_헬스장.jpg",
     metrics: [
       { label: "신규 등록", value: "+120%" },
       { label: "제작 기간", value: "1주" },
@@ -68,6 +73,7 @@ export const CASES: CaseItem[] = [
     category: "보험 설계",
     summary: "랜딩페이지 제작 후 상담 문의가 꾸준히 증가했습니다.",
     gradient: "from-sky-400 to-blue-600",
+    image: "/cases_보험설계.jpg",
     metrics: [
       { label: "상담 신청", value: "+210%" },
       { label: "광고 전환", value: "2.3x" },
@@ -84,6 +90,7 @@ export const CASES: CaseItem[] = [
     category: "법률 사무소",
     summary: "쉬운 설명과 빠른 진행으로 부담 없이 완성했습니다.",
     gradient: "from-slate-500 to-gray-700",
+    image: "/cases_법률사무소.jpg",
     metrics: [
       { label: "상담 예약", value: "+95%" },
       { label: "체류 시간", value: "+40%" },
@@ -95,19 +102,20 @@ export const CASES: CaseItem[] = [
     ],
   },
   {
-    slug: "carcenter",
-    name: "OO 카센터",
-    category: "카센터",
-    summary: "지역 키워드 광고와 연결해 방문 문의가 늘었습니다.",
+    slug: "detailing",
+    name: "OO 자동차 디테일링",
+    category: "자동차 디테일링",
+    summary: "지역 키워드 광고와 연결해 예약 문의가 꾸준히 늘었습니다.",
     gradient: "from-amber-400 to-orange-600",
+    image: "/cases_자동차디테일링.jpg",
     metrics: [
-      { label: "방문 문의", value: "+130%" },
+      { label: "예약 문의", value: "+130%" },
       { label: "지역 노출", value: "상단" },
     ],
     highlights: [
       "당근 플레이스 지역 광고 연동",
-      "정비 항목 가격 안내",
-      "위치 · 예약 동선 정리",
+      "시공 패키지 · 가격 안내 정리",
+      "위치 · 예약 동선 최적화",
     ],
   },
   {
@@ -116,6 +124,7 @@ export const CASES: CaseItem[] = [
     category: "카페",
     summary: "모바일 화면이 훨씬 보기 좋아지고 피드백도 빨랐습니다.",
     gradient: "from-yellow-400 to-amber-600",
+    image: "/cases_카페.jpg",
     metrics: [
       { label: "모바일 방문", value: "+160%" },
       { label: "제작 기간", value: "3일" },
@@ -132,6 +141,7 @@ export const CASES: CaseItem[] = [
     category: "미용실",
     summary: "업종 특성에 맞춰 예약 문의 동선을 새로 잡았습니다.",
     gradient: "from-fuchsia-400 to-purple-600",
+    image: "/cases_미용실.jpg",
     metrics: [
       { label: "예약 문의", value: "+140%" },
       { label: "재방문", value: "+25%" },

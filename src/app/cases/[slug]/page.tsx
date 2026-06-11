@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { CASES } from "@/lib/cases";
@@ -27,8 +28,17 @@ export default function CaseDetailPage({ params }: Props) {
 
   return (
     <article className="pb-16">
-      <div className={`bg-gradient-to-br ${item.gradient}`}>
-        <div className="container-w py-16 text-white">
+      <div className={`relative overflow-hidden bg-gradient-to-br ${item.gradient}`}>
+        <Image
+          src={item.image}
+          alt={`${item.name} 대표 이미지`}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-slate-950/40" aria-hidden />
+        <div className="container-w relative py-16 text-white">
           <Link
             href="/cases"
             className="mb-6 inline-flex items-center gap-1 text-sm font-semibold text-white/80 hover:text-white"
@@ -36,10 +46,12 @@ export default function CaseDetailPage({ params }: Props) {
             <ArrowLeft className="h-4 w-4" /> 성공사례 목록
           </Link>
           <p className="text-sm font-semibold text-white/80">{item.category}</p>
-          <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-extrabold drop-shadow sm:text-4xl">
             {item.name}
           </h1>
-          <p className="mt-3 max-w-2xl text-lg text-white/90">{item.summary}</p>
+          <p className="mt-3 max-w-2xl text-lg text-white/90 drop-shadow">
+            {item.summary}
+          </p>
         </div>
       </div>
 
