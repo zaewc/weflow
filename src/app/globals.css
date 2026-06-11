@@ -60,7 +60,7 @@ body {
 
 /* 모바일 하단 고정바와 콘텐츠가 겹치지 않도록 여백 확보 */
 .has-bottom-bar {
-  padding-bottom: 4.5rem;
+  padding-bottom: 6rem;
 }
 
 /* liquid-glass Component 배경 스크롤 애니메이션 */
