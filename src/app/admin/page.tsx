@@ -248,7 +248,7 @@ export default function AdminPage() {
               }`}
             >
               {f.label}{" "}
-              <span className="opacity-70">{counts[f.key]}</span>
+              <span className="opacity-70">{countFor(f.key)}</span>
             </button>
           ))}
         </div>
