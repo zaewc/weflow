@@ -13,7 +13,8 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html"],
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/**/*.d.ts"],
+      // 벤더링된 shadcn/UI 컴포넌트는 커버리지 대상에서 제외
+      exclude: ["src/**/*.d.ts", "src/components/ui/**"],
       thresholds: {
         statements: 100,
         branches: 100,
