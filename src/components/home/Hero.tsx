@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Rocket, ShieldCheck, Wallet } from "lucide-react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
 import { GlassEffect } from "@/components/ui/liquid-glass";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { GlassButton } from "@/components/ui/apple-tahoe-liquid-glass-button";
 
 const BADGES = [
   { Icon: ShieldCheck, title: "케어 플랜", desc: "제작·광고·운영" },
@@ -60,20 +60,20 @@ export default function Hero() {
           <Link href="/diagnosis" className="btn-primary">
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
           </Link>
-          <LiquidButton
+          <GlassButton
             size="lg"
-            className="text-white"
+            contentClassName="!text-white"
             onClick={() => router.push("/cases")}
           >
             성공 사례 보기
-          </LiquidButton>
-          <LiquidButton
+          </GlassButton>
+          <GlassButton
             size="lg"
-            className="text-white"
+            contentClassName="!text-white"
             onClick={() => router.push("/landing")}
           >
             WEFLOW 랜딩 페이지
-          </LiquidButton>
+          </GlassButton>
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
