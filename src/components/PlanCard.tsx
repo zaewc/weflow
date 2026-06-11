@@ -21,7 +21,7 @@ export default function PlanCardView({ plan }: { plan: Plan }) {
         {plan.badge && (
           <span
             className={`text-sm font-extrabold tracking-wide ${
-              plan.highlight ? "text-brand-600" : "text-slate-400"
+              plan.highlight ? "text-brand-600" : "text-slate-500"
             }`}
           >
             {plan.badge}
@@ -43,7 +43,7 @@ export default function PlanCardView({ plan }: { plan: Plan }) {
       </ul>
 
       <div className="border-t border-slate-100 pt-4">
-        <p className="text-sm font-medium text-slate-400 line-through">
+        <p className="text-sm font-medium text-slate-500 line-through">
           {plan.oldPrice}
         </p>
         <p className="mt-0.5 flex items-end gap-1">
@@ -55,7 +55,7 @@ export default function PlanCardView({ plan }: { plan: Plan }) {
             {plan.newPrice}
           </span>
           {plan.priceSuffix && (
-            <span className="pb-1 text-lg font-bold text-slate-400">
+            <span className="pb-1 text-lg font-bold text-slate-500">
               {plan.priceSuffix}
             </span>
           )}
