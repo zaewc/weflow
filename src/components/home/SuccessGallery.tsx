@@ -19,12 +19,12 @@ export default function SuccessGallery() {
         title="성공사례"
         description="어디서도 볼 수 없는 업종별 전환 최적화 사례를 직접 확인하세요."
         items={ITEMS}
+        headerAction={
+          <Link href="/cases" className="btn-primary">
+            성공사례 더보기 <ArrowRight className="h-4 w-4" />
+          </Link>
+        }
       />
-      <div className="container-w pb-20 text-center">
-        <Link href="/cases" className="btn-primary">
-          성공사례 더보기 <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
     </section>
   );
 }
