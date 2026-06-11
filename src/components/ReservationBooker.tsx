@@ -133,7 +133,7 @@ export default function ReservationBooker() {
               <div
                 key={w}
                 className={`py-1 text-xs font-semibold ${
-                  i === 0 ? "text-red-400" : "text-slate-400"
+                  i === 0 ? "text-red-500" : "text-slate-500"
                 }`}
               >
                 {w}
@@ -199,10 +199,14 @@ export default function ReservationBooker() {
           </div>
 
           <div className="mt-4">
-            <label className="mb-1 block text-sm font-semibold text-slate-700">
+            <label
+              htmlFor="reservation-custom-time"
+              className="mb-1 block text-sm font-semibold text-slate-700"
+            >
               원하시는 시간대 (직접 입력)
             </label>
             <input
+              id="reservation-custom-time"
               value={customTime}
               onChange={(e) => {
                 setCustomTime(e.target.value);
