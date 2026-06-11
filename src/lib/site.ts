@@ -27,7 +27,7 @@ export const NAV = [
   { label: "제작플랜&가격안내", href: "/pricing" },
   { label: "성공사례", href: "/cases" },
   { label: "예약", href: "/reservation" },
-  { label: "무료진단받기", href: "/diagnosis" },
+  
 ] as const;
 
 // 제작 종류 (예약 / 무료진단 폼 공통)
