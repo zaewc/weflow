@@ -18,9 +18,13 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
   webServer: {
-    command: `npm run dev -- -p ${PORT}`,
+    // CI에서는 프로덕션 빌드로 구동 — 라우트 사전 컴파일로 dev 온디맨드
+    // 컴파일에 의한 첫 진입 지연/플래키를 방지.
+    command: process.env.CI
+      ? `npm run build && npm run start -- -p ${PORT}`
+      : `npm run dev -- -p ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
   },
 });
