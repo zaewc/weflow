@@ -39,7 +39,7 @@ export default function ReviewMarquee() {
         </Link>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
         <div className="flex w-max animate-marquee">
           {[...rowA, ...rowA].map((r, i) => (
             <Card key={`a-${i}`} review={r} />
