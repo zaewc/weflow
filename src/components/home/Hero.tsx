@@ -12,6 +12,26 @@ const BADGES = [
   { Icon: Wallet, title: "합리적 비용", desc: "가성비+퀄리티" },
 ];
 
+// 어두운 히어로 위 보조 글래스 버튼 (높이/폰트/흰 텍스트 통일)
+function HeroGlassButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <GlassButton
+      size="default"
+      className="h-12 rounded-xl text-base font-medium"
+      contentClassName="!text-white"
+      onClick={onClick}
+    >
+      {children}
+    </GlassButton>
+  );
+}
+
 export default function Hero() {
   const router = useRouter();
 
@@ -59,22 +79,12 @@ export default function Hero() {
           <AnimatedGradientButton href="/diagnosis" className="h-12 text-base">
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
           </AnimatedGradientButton>
-          <GlassButton
-            size="default"
-            className="h-12 rounded-xl text-base font-medium"
-            contentClassName="!text-white"
-            onClick={() => router.push("/cases")}
-          >
+          <HeroGlassButton onClick={() => router.push("/cases")}>
             성공 사례 보기
-          </GlassButton>
-          <GlassButton
-            size="default"
-            className="h-12 rounded-xl text-base font-medium"
-            contentClassName="!text-white"
-            onClick={() => router.push("/landing")}
-          >
+          </HeroGlassButton>
+          <HeroGlassButton onClick={() => router.push("/landing")}>
             WEFLOW 랜딩 페이지
-          </GlassButton>
+          </HeroGlassButton>
         </div>
 
         <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4">
