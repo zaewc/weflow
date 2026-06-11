@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { PROJECT_TYPES } from "@/lib/site";
 import type { SubmissionKind } from "@/lib/types";
@@ -25,6 +25,7 @@ export default function SubmissionForm({
   submitLabel = "무료진단 후 견적받기",
   compact = false,
 }: Props) {
+  const uid = useId();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [projectType, setProjectType] = useState<string>("");
@@ -98,10 +99,14 @@ export default function SubmissionForm({
       className={compact ? "space-y-3" : "space-y-4"}
     >
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">
+        <label
+          htmlFor={`${uid}-name`}
+          className="mb-1 block text-sm font-semibold text-slate-700"
+        >
           이름 <span className="text-brand-600">*</span>
         </label>
         <input
+          id={`${uid}-name`}
           className={inputBase}
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -111,10 +116,14 @@ export default function SubmissionForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">
+        <label
+          htmlFor={`${uid}-phone`}
+          className="mb-1 block text-sm font-semibold text-slate-700"
+        >
           연락처 <span className="text-brand-600">*</span>
         </label>
         <input
+          id={`${uid}-phone`}
           className={inputBase}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -125,10 +134,14 @@ export default function SubmissionForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">
+        <label
+          htmlFor={`${uid}-type`}
+          className="mb-1 block text-sm font-semibold text-slate-700"
+        >
           제작종류
         </label>
         <select
+          id={`${uid}-type`}
           className={`${inputBase} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
           style={{
             backgroundImage:
@@ -147,10 +160,14 @@ export default function SubmissionForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">
+        <label
+          htmlFor={`${uid}-industry`}
+          className="mb-1 block text-sm font-semibold text-slate-700"
+        >
           업종
         </label>
         <input
+          id={`${uid}-industry`}
           className={inputBase}
           value={industry}
           onChange={(e) => setIndustry(e.target.value)}
@@ -159,10 +176,14 @@ export default function SubmissionForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">
+        <label
+          htmlFor={`${uid}-note`}
+          className="mb-1 block text-sm font-semibold text-slate-700"
+        >
           추가요청사항
         </label>
         <textarea
+          id={`${uid}-note`}
           className={`${inputBase} resize-none`}
           rows={compact ? 2 : 3}
           value={note}
