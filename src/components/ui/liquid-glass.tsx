@@ -19,7 +19,7 @@ interface DockIcon {
 }
 
 // Glass Effect Wrapper Component
-const GlassEffect: React.FC<GlassEffectProps> = ({
+export const GlassEffect: React.FC<GlassEffectProps> = ({
   children,
   className = "",
   style = {},
@@ -73,7 +73,7 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
 };
 
 // Dock Component
-const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
+export const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
   icons,
   href,
 }) => (
@@ -100,7 +100,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
 );
 
 // Button Component
-const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
+export const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
   children,
   href,
 }) => (
@@ -120,7 +120,7 @@ const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
 );
 
 // SVG Filter Component
-const GlassFilter: React.FC = () => (
+export const GlassFilter: React.FC = () => (
   <svg style={{ display: "none" }}>
     <filter
       id="glass-distortion"
