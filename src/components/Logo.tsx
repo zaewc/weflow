@@ -10,7 +10,7 @@ export default function Logo({ className = "" }: { className?: string }) {
     >
       <Image
         src="/logo_icon.png"
-        alt="WEFLOW"
+        alt=""
         width={32}
         height={32}
         priority
