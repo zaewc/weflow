@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Rocket, ShieldCheck, Wallet } from "lucide-react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
-import { GlassEffect } from "@/components/ui/liquid-glass";
 import { GlassButton } from "@/components/ui/apple-tahoe-liquid-glass-button";
+import { AnimatedGradientButton } from "@/components/ui/button-1";
 
 const BADGES = [
   { Icon: ShieldCheck, title: "케어 플랜", desc: "제작·광고·운영" },
@@ -57,9 +56,9 @@ export default function Hero() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link href="/diagnosis" className="btn-primary">
+          <AnimatedGradientButton href="/diagnosis">
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
-          </Link>
+          </AnimatedGradientButton>
           <GlassButton
             size="lg"
             contentClassName="!text-white"
