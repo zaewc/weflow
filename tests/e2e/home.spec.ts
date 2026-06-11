@@ -26,7 +26,11 @@ test.describe("home navigation", () => {
 
   test("opens a case detail from the cases grid", async ({ page }) => {
     await page.goto("/cases");
-    await page.getByText("OO PT샵").first().click();
+    await page.getByRole("link", { name: /OO PT샵/ }).first().click();
+    await page.waitForURL(/\/cases\/pt/);
+    await expect(
+      page.getByRole("heading", { name: "OO PT샵" }),
+    ).toBeVisible();
     await expect(page.getByText("진행 포인트")).toBeVisible();
   });
 
