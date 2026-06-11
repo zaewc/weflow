@@ -103,7 +103,7 @@ export const LimelightNav = ({
           }}
           href={href}
           title={label}
-          className={`relative z-20 flex h-full cursor-pointer items-center justify-center p-5 ${iconContainerClassName}`}
+          className={`relative z-20 flex h-full cursor-pointer flex-col items-center justify-center gap-1 px-4 ${iconContainerClassName}`}
           onClick={(e) => {
             if (href) e.preventDefault();
             handleItemClick(index, onClick);
@@ -115,6 +115,15 @@ export const LimelightNav = ({
               activeIndex === index ? "opacity-100" : "opacity-40"
             } ${icon.props.className || ""} ${iconClassName || ""}`,
           })}
+          {label && (
+            <span
+              className={`text-[11px] font-medium leading-none whitespace-nowrap transition-colors ${
+                activeIndex === index ? "text-brand-700" : "text-slate-500"
+              }`}
+            >
+              {label}
+            </span>
+          )}
         </a>
       ))}
 
