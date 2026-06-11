@@ -23,7 +23,10 @@ KV 환경변수가 없으면 예약/문의 데이터는 `data/submissions.json` 
 npm test             # 단위/통합 테스트 (Vitest)
 npm run test:cov     # 커버리지 (statements/branches/functions/lines 100% 임계값 강제)
 npm run e2e          # E2E 테스트 (Playwright, 최초 1회 `npx playwright install chromium` 필요)
+npm run build && npm run lhci   # Lighthouse 측정 + 임계값 검증 (Chrome 필요)
 ```
+
+Lighthouse 기준(`lighthouserc.json`): 성능 ≥ 90, 접근성 · 모범사례 · SEO = 100. (현재 /, /pricing, /landing, /diagnosis 4개 페이지 모두 100/100/100/100)
 
 - **단위/통합**: `tests/lib`(데이터·검증·인증·저장소), `tests/api`(라우트 핸들러), `tests/components`·`tests/pages`(RTL). 커버리지 100% 유지.
 - **E2E**: `tests/e2e` — 네비게이션, 무료진단/예약 접수, 관리자 로그인·상태변경 플로우.
