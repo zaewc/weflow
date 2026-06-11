@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Info } from "lucide-react";
 import PlanCardView from "@/components/PlanCard";
+import PageHero from "@/components/PageHero";
+import SectionHeading from "@/components/SectionHeading";
 import {
   PRODUCTION_PLANS,
   CARE_PLANS,
@@ -30,11 +32,12 @@ function PlanGroup({
   return (
     <section id={id} className="scroll-mt-20 py-12">
       <div className="container-w">
-        <div className="mb-8 text-center">
-          <span className="chip">{eyebrow}</span>
-          <h2 className="section-title mt-3">{title}</h2>
-          <p className="mt-2 text-slate-500">{desc}</p>
-        </div>
+        <SectionHeading
+          eyebrow={eyebrow}
+          title={title}
+          description={desc}
+          className="mb-8"
+        />
         <div className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (
             <PlanCardView key={plan.name} plan={plan} />
@@ -48,17 +51,11 @@ function PlanGroup({
 export default function PricingPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-brand-50 to-white py-16">
-        <div className="container-w text-center">
-          <span className="chip">PRICE</span>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            제작플랜 & 가격안내
-          </h1>
-          <p className="mt-3 text-slate-600">
-            필요한 기능만 구성한 합리적인 가격. 지금은 파격 세일가로 진행됩니다.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="PRICE"
+        title="제작플랜 & 가격안내"
+        description="필요한 기능만 구성한 합리적인 가격. 지금은 파격 세일가로 진행됩니다."
+      />
 
       <PlanGroup
         id="production"

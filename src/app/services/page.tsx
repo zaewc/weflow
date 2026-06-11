@@ -11,6 +11,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { DETAIL_STEPS, AD_SYSTEM } from "@/lib/process";
+import PageHero from "@/components/PageHero";
+import SectionHeading from "@/components/SectionHeading";
 
 export const metadata: Metadata = {
   title: "서비스 | WEFLOW",
@@ -29,17 +31,11 @@ const STEP_CARDS = DETAIL_STEPS.map((step, i) => ({
 export default function ServicesPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-brand-50 to-white py-16">
-        <div className="container-w text-center">
-          <span className="chip">SERVICE</span>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            제작 진행 과정
-          </h1>
-          <p className="mt-3 text-slate-600">
-            상담부터 광고 운영·사후관리까지, 문의가 들어오는 구조를 설계합니다.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="SERVICE"
+        title="제작 진행 과정"
+        description="상담부터 광고 운영·사후관리까지, 문의가 들어오는 구조를 설계합니다."
+      />
 
       {/* 6단계 제작 진행 과정 */}
       <section className="container-w py-16">
@@ -72,13 +68,11 @@ export default function ServicesPage() {
       {/* 광고 운영 · 사후관리 시스템 */}
       <section id="ad" className="scroll-mt-20 bg-slate-50 py-16">
         <div className="container-w">
-          <div className="mb-10 text-center">
-            <span className="chip">AD & SEO</span>
-            <h2 className="section-title mt-3">광고 운영 · 사후관리 시스템</h2>
-            <p className="mt-2 text-slate-500">
-              인스타 · 블로그 · 네이버 키워드 등 채널별 광고를 통합 운영·관리합니다.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="AD & SEO"
+            title="광고 운영 · 사후관리 시스템"
+            description="인스타 · 블로그 · 네이버 키워드 등 채널별 광고를 통합 운영·관리합니다."
+          />
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {AD_SYSTEM.map((item) => (

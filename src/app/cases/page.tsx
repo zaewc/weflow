@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import CaseCard from "@/components/CaseCard";
+import PageHero from "@/components/PageHero";
 import { CASES } from "@/lib/cases";
 
 export const metadata: Metadata = {
@@ -23,17 +24,11 @@ const INDUSTRIES = [
 export default function CasesPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-brand-50 to-white py-16">
-        <div className="container-w text-center">
-          <span className="chip">SUCCESS CASE</span>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            다양한 업종의 성공 사례
-          </h1>
-          <p className="mt-3 text-slate-600">
-            어디서도 볼 수 없는 업종별 전환 최적화 사례를 직접 확인하세요.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="SUCCESS CASE"
+        title="다양한 업종의 성공 사례"
+        description="어디서도 볼 수 없는 업종별 전환 최적화 사례를 직접 확인하세요."
+      />
 
       <section className="container-w py-14">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-4">
