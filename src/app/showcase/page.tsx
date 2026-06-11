@@ -5,12 +5,12 @@ import {
   Component as LiquidGlassDock,
   GlassButton,
   GlassFilter,
-} from "@/components/ui/liquid-glass";
+} from "@/components/ui/glass-dock";
 import {
   LiquidButton,
   MetalButton,
-} from "@/components/ui/liquid-glass-button";
-import { ButtonColorful } from "@/components/ui/button-colorful";
+} from "@/components/ui/liquid-metal-button";
+import { ButtonColorful } from "@/components/ui/colorful-button";
 
 const METAL_VARIANTS = [
   "default",

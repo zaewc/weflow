@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { ArrowRight, Rocket, ShieldCheck, Wallet } from "lucide-react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
-import { GlassButton } from "@/components/ui/apple-tahoe-liquid-glass-button";
-import { AnimatedGradientButton } from "@/components/ui/button-1";
+import { GlassButton } from "@/components/ui/glass-button";
+import { AnimatedGradientButton } from "@/components/ui/animated-gradient-button";
 
 const BADGES = [
   { Icon: ShieldCheck, title: "케어 플랜", desc: "제작·광고·운영" },
