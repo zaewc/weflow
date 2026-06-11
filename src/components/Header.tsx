@@ -53,6 +53,8 @@ export default function Header() {
             items={navItems}
             defaultActiveIndex={activeIndex}
             className="border-slate-200 bg-white/60"
+            iconContainerClassName="min-w-[7.5rem]"
+            iconClassName="text-brand-600"
           />
         </div>
 

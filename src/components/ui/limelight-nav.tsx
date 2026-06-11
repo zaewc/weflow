@@ -103,7 +103,7 @@ export const LimelightNav = ({
           }}
           href={href}
           title={label}
-          className={`relative z-20 flex h-full cursor-pointer flex-col items-center justify-center gap-1 px-4 ${iconContainerClassName}`}
+          className={`relative z-20 flex h-full cursor-pointer flex-col items-center justify-center gap-1 px-3 ${iconContainerClassName}`}
           onClick={(e) => {
             if (href) e.preventDefault();
             handleItemClick(index, onClick);
