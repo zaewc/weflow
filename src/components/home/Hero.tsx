@@ -61,7 +61,7 @@ export default function Hero() {
           </AnimatedGradientButton>
           <GlassButton
             size="default"
-            className="h-12 rounded-xl text-base font-bold"
+            className="h-12 rounded-xl text-base font-medium"
             contentClassName="!text-white"
             onClick={() => router.push("/cases")}
           >
@@ -69,7 +69,7 @@ export default function Hero() {
           </GlassButton>
           <GlassButton
             size="default"
-            className="h-12 rounded-xl text-base font-bold"
+            className="h-12 rounded-xl text-base font-medium"
             contentClassName="!text-white"
             onClick={() => router.push("/landing")}
           >
