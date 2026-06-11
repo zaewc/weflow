@@ -1,17 +1,16 @@
 import { ArrowDown } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 import { SIMPLE_STEPS, DETAIL_STEPS } from "@/lib/process";
 
 // 제작 진행 과정(4칸) + 6단계 제작 프로세스(6칸) 양옆 나란히 (메뉴얼 page 2)
 export default function ProcessSection() {
   return (
     <section className="container-w py-16">
-      <div className="mb-10 text-center">
-        <span className="chip">PROCESS</span>
-        <h2 className="section-title mt-3">제작 진행 과정</h2>
-        <p className="mt-2 text-slate-500">
-          상담부터 사후관리까지, 체계적인 6단계 프로세스로 진행합니다.
-        </p>
-      </div>
+      <SectionHeading
+        eyebrow="PROCESS"
+        title="제작 진행 과정"
+        description="상담부터 사후관리까지, 체계적인 6단계 프로세스로 진행합니다."
+      />
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* 제작 진행 과정 — 세로 4칸 */}

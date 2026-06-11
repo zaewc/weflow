@@ -7,6 +7,7 @@ import {
   Layers,
   ArrowDown,
 } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 
 // WEFLOW만의 케어 플랜 혜택 — 6칸 + 진행 흐름 (메뉴얼 page 2)
 const BENEFITS = [
@@ -23,10 +24,7 @@ const FLOW = ["고객의뢰", "접수 후 제작", "3~7일 배송완료", "광�
 export default function CarePlanBenefits() {
   return (
     <section className="container-w py-16">
-      <div className="mb-10 text-center">
-        <span className="chip">CARE PLAN</span>
-        <h2 className="section-title mt-3">WEFLOW만의 케어 플랜 혜택</h2>
-      </div>
+      <SectionHeading eyebrow="CARE PLAN" title="WEFLOW만의 케어 플랜 혜택" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {BENEFITS.map(({ Icon, title, desc }) => (
