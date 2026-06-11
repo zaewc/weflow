@@ -2,41 +2,59 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Menu,
+  X,
+  Home,
+  LayoutGrid,
+  Tag,
+  Trophy,
+  CalendarDays,
+  type LucideIcon,
+} from "lucide-react";
 import Logo from "@/components/Logo";
+import { LimelightNav, type NavItem } from "@/components/ui/limelight-nav";
 import { NAV } from "@/lib/site";
+
+// NAV 순서와 1:1 대응하는 아이콘
+const NAV_ICONS: LucideIcon[] = [Home, LayoutGrid, Tag, Trophy, CalendarDays];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const activeIndex = Math.max(
+    0,
+    NAV.findIndex((n) =>
+      n.href === "/" ? pathname === "/" : pathname.startsWith(n.href),
+    ),
+  );
+
+  const navItems: NavItem[] = NAV.map((n, i) => {
+    const Icon = NAV_ICONS[i]!;
+    return {
+      id: n.href,
+      label: n.label,
+      href: n.href,
+      icon: <Icon />,
+      onClick: () => router.push(n.href),
+    };
+  });
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/90 backdrop-blur">
       <div className="container-w flex h-16 items-center justify-between">
         <Logo />
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {NAV.map((item) => {
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  active
-                    ? "bg-brand-50 text-brand-700"
-                    : "text-slate-600 hover:text-brand-700"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="hidden lg:block">
+          <LimelightNav
+            items={navItems}
+            defaultActiveIndex={activeIndex}
+            className="border-slate-200 bg-white/60"
+          />
+        </div>
 
         <div className="hidden lg:block">
           <Link href="/diagnosis" className="btn-primary px-4 py-2 text-sm">

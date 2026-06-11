@@ -3,20 +3,31 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import Header from "@/components/Header";
 
 describe("Header", () => {
-  it("marks home active when pathname is root", () => {
+  it("renders the limelight nav links at root", () => {
     globalThis.__pathname = "/";
     render(<Header />);
-    const home = screen.getByRole("link", { name: "홈" });
-    expect(home.className).toContain("bg-brand-50");
+    expect(screen.getByRole("link", { name: "홈" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+    expect(screen.getByRole("link", { name: "서비스" })).toHaveAttribute(
+      "href",
+      "/services",
+    );
+    // 클릭 시 라우팅 핸들러(router.push) 실행
+    fireEvent.click(screen.getByRole("link", { name: "서비스" }));
   });
 
-  it("marks a section active when pathname matches its prefix", () => {
-    globalThis.__pathname = "/services";
+  it("resolves the active item from a deeper pathname", () => {
+    globalThis.__pathname = "/pricing";
     render(<Header />);
-    const services = screen.getByRole("link", { name: "서비스" });
-    expect(services.className).toContain("bg-brand-50");
-    const home = screen.getByRole("link", { name: "홈" });
-    expect(home.className).not.toContain("bg-brand-50");
+    expect(
+      screen.getByRole("link", { name: "제작플랜&가격안내" }),
+    ).toHaveAttribute("href", "/pricing");
+    expect(screen.getByRole("link", { name: "성공사례" })).toHaveAttribute(
+      "href",
+      "/cases",
+    );
   });
 
   it("toggles the mobile menu open and closes on link click", () => {
