@@ -1,6 +1,6 @@
 import Hero from "@/components/home/Hero";
 import CarePlanBenefits from "@/components/home/CarePlanBenefits";
-import SuccessShowcase from "@/components/home/SuccessShowcase";
+import SuccessGallery from "@/components/home/SuccessGallery";
 import ProcessSection from "@/components/ProcessSection";
 import ReviewMarquee from "@/components/ReviewMarquee";
 
@@ -9,7 +9,7 @@ export default function HomePage() {
     <>
       <Hero />
       <CarePlanBenefits />
-      <SuccessShowcase />
+      <SuccessGallery />
       <ProcessSection />
       <ReviewMarquee />
     </>
