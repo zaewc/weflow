@@ -110,6 +110,8 @@ function GradientSvg({
           cy="0"
           r="1"
           gradientUnits="userSpaceOnUse"
+          gradientTransform={GRADIENT_TRANSFORMS[0]}
+          initial={{ gradientTransform: GRADIENT_TRANSFORMS[0] }}
           animate={{ gradientTransform: [...GRADIENT_TRANSFORMS] }}
           transition={{
             duration: isHovered ? 4 : 10,
