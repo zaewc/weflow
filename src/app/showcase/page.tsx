@@ -1,7 +1,11 @@
 "use client";
 
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
-import { Component as LiquidGlassDock } from "@/components/ui/liquid-glass";
+import {
+  Component as LiquidGlassDock,
+  GlassButton,
+  GlassFilter,
+} from "@/components/ui/liquid-glass";
 import {
   LiquidButton,
   MetalButton,
@@ -21,6 +25,7 @@ const METAL_VARIANTS = [
 export default function ShowcasePage() {
   return (
     <div className="space-y-16 pb-16">
+      <GlassFilter />
       {/* 배경 그라데이션 애니메이션 + CTA / 리퀴드 버튼 */}
       <section className="relative h-[70vh] overflow-hidden rounded-none">
         <BackgroundGradientAnimation containerClassName="h-full w-full">
@@ -33,6 +38,9 @@ export default function ShowcasePage() {
               <LiquidButton size="xl" className="text-white">
                 Liquid Glass
               </LiquidButton>
+              <GlassButton>
+                <span className="text-lg text-white">Glass Button</span>
+              </GlassButton>
             </div>
           </div>
         </BackgroundGradientAnimation>
