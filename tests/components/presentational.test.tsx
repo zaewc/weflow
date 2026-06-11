@@ -10,7 +10,7 @@ import CaseCard from "@/components/CaseCard";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Hero from "@/components/home/Hero";
 import CarePlanBenefits from "@/components/home/CarePlanBenefits";
-import SuccessGallery from "@/components/home/SuccessGallery";
+import SuccessShowcase from "@/components/home/SuccessShowcase";
 import { PRODUCTION_PLANS, CARE_PLANS } from "@/lib/pricing";
 import { CASES } from "@/lib/cases";
 import type { SubmissionStatus } from "@/lib/types";
@@ -124,13 +124,18 @@ describe("home sections", () => {
     render(<CarePlanBenefits />);
     expect(screen.getByText("WEFLOW만의 케어 플랜 혜택")).toBeInTheDocument();
   });
-  it("renders SuccessGallery", () => {
-    render(<SuccessGallery />);
+  it("renders SuccessShowcase", () => {
+    render(<SuccessShowcase />);
     expect(screen.getByText("성공사례")).toBeInTheDocument();
-    expect(
-      screen.getByText("성공사례 더보기").closest("a"),
-    ).toHaveAttribute("href", "/cases");
-    // 사례 카드가 캐러셀에 렌더링됨
+    // 살펴보기 / 더보기 모두 문의창(무료진단)으로
+    expect(screen.getByText("살펴보기").closest("a")).toHaveAttribute(
+      "href",
+      "/diagnosis",
+    );
+    expect(screen.getByText("더보기").closest("a")).toHaveAttribute(
+      "href",
+      "/diagnosis",
+    );
     expect(screen.getByText("OO PT샵")).toBeInTheDocument();
   });
 });
