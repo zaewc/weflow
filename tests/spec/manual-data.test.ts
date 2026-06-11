@@ -16,14 +16,15 @@ import { CASES } from "@/lib/cases";
 import { DIAGNOSIS_CHECKS } from "@/lib/diagnosis";
 
 describe("메뉴얼 page1/5/13 — 카테고리 & 회사정보", () => {
-  it("상단 카테고리: 홈/서비스/제작플랜&가격안내/성공사례/예약/무료진단받기", () => {
+  // 메뉴얼은 무료진단받기를 카테고리에 포함하나, 헤더 CTA('무료 진단 신청')와
+  // 하단 고정바('무료진단')가 /diagnosis로 연결되어 상단 nav에서는 제거됨.
+  it("상단 카테고리: 홈/서비스/제작플랜&가격안내/성공사례/예약", () => {
     expect(NAV.map((n) => n.label)).toEqual([
       "홈",
       "서비스",
       "제작플랜&가격안내",
       "성공사례",
       "예약",
-      "무료진단받기",
     ]);
     expect(NAV.map((n) => n.href)).toEqual([
       "/",
@@ -31,8 +32,9 @@ describe("메뉴얼 page1/5/13 — 카테고리 & 회사정보", () => {
       "/pricing",
       "/cases",
       "/reservation",
-      "/diagnosis",
     ]);
+    // 무료진단(/diagnosis)은 nav 외 경로로 접근 가능
+    expect(PROJECT_TYPES.length).toBe(4);
   });
 
   it("하단바 회사정보 (대표/사업자번호/이메일/운영시간/카피라이트)", () => {
