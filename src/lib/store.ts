@@ -15,13 +15,16 @@ import type {
 const SUBS_INDEX = "weflow:subs"; // sorted set (score = createdAt ms)
 const subKey = (id: string) => `weflow:sub:${id}`;
 
+let cachedRedis: Redis | null | undefined;
+
 function getRedis(): Redis | null {
+  if (cachedRedis !== undefined) return cachedRedis;
   const url =
     process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
   const token =
     process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
+  cachedRedis = !url || !token ? null : new Redis({ url, token });
+  return cachedRedis;
 }
 
 function makeId(): string {
@@ -90,11 +93,14 @@ export async function createSubmission(
     await fileWriteAll(items);
     return submission;
   }
-  await redis.hset(subKey(submission.id), { ...submission });
-  await redis.zadd(SUBS_INDEX, {
-    score: new Date(submission.createdAt).getTime(),
-    member: submission.id,
-  });
+  // 두 쓰기는 서로 독립적 — 병렬로 실행
+  await Promise.all([
+    redis.hset(subKey(submission.id), { ...submission }),
+    redis.zadd(SUBS_INDEX, {
+      score: new Date(submission.createdAt).getTime(),
+      member: submission.id,
+    }),
+  ]);
   return submission;
 }
 
@@ -127,7 +133,10 @@ export async function deleteSubmission(id: string): Promise<boolean> {
     await fileWriteAll(next);
     return true;
   }
-  const removed = await redis.zrem(SUBS_INDEX, id);
-  await redis.del(subKey(id));
+  // 인덱스 제거와 해시 삭제는 독립적 — 병렬로 실행
+  const [removed] = await Promise.all([
+    redis.zrem(SUBS_INDEX, id),
+    redis.del(subKey(id)),
+  ]);
   return removed > 0;
 }

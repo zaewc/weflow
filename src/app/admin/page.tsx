@@ -196,12 +196,10 @@ export default function AdminPage() {
   const reservations = filtered.filter((it) => it.kind === "reservation");
   const inquiries = filtered.filter((it) => it.kind === "inquiry");
 
-  const counts = {
-    all: items.length,
-    pending: items.filter((i) => i.status === "pending").length,
-    in_progress: items.filter((i) => i.status === "in_progress").length,
-    done: items.filter((i) => i.status === "done").length,
-  };
+  const countFor = (key: "all" | SubmissionStatus) =>
+    key === "all"
+      ? items.length
+      : items.filter((i) => i.status === key).length;
 
   return (
     <div className="min-h-screen bg-slate-100">

@@ -10,6 +10,18 @@ import {
   type SubmissionStatus,
 } from "@/lib/types";
 
+// 행별 상태 변경 버튼 (진행중/완료)
+const STATUS_ACTIONS: { status: SubmissionStatus; className: string }[] = [
+  {
+    status: "in_progress",
+    className: "bg-amber-50 text-amber-700 hover:bg-amber-100",
+  },
+  {
+    status: "done",
+    className: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
+  },
+];
+
 function formatDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleString("ko-KR", {
@@ -139,18 +151,15 @@ function SubmissionRow({
         )}
         <td className="px-4 py-3">
           <div className="flex flex-wrap gap-1">
-            <button
-              onClick={() => onStatus(row.id, "in_progress")}
-              className="rounded-md bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700 hover:bg-amber-100"
-            >
-              {STATUS_LABEL.in_progress}
-            </button>
-            <button
-              onClick={() => onStatus(row.id, "done")}
-              className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
-            >
-              {STATUS_LABEL.done}
-            </button>
+            {STATUS_ACTIONS.map((action) => (
+              <button
+                key={action.status}
+                onClick={() => onStatus(row.id, action.status)}
+                className={`rounded-md px-2 py-1 text-xs font-semibold ${action.className}`}
+              >
+                {STATUS_LABEL[action.status]}
+              </button>
+            ))}
             <button
               onClick={() => onDelete(row.id)}
               className="rounded-md bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-100"

@@ -32,9 +32,7 @@ export default function SubmissionForm({
   const [industry, setIndustry] = useState("");
   const [note, setNote] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent) {
@@ -74,7 +72,7 @@ export default function SubmissionForm({
       }
       setStatus("done");
     } catch (err) {
-      setStatus("error");
+      setStatus("idle");
       setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
     }
   }
