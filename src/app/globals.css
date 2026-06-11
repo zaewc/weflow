@@ -2,8 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* shadcn 디자인 토큰 (벤더 컴포넌트가 사용). 사이트 기본 스타일은 아래 body 규칙을
+   그대로 유지하므로, shadcn의 전역 base 리셋(* { border-border } 등)은 적용하지 않습니다. */
 :root {
   color-scheme: light;
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
 }
 
 html {
@@ -19,19 +63,73 @@ body {
   padding-bottom: 4.5rem;
 }
 
+/* liquid-glass Component 배경 스크롤 애니메이션 */
+@keyframes moveBackground {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% -1000%;
+  }
+}
+
 @layer components {
   .container-w {
     @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
   }
+
+  /* CTA 버튼 — 컬러풀 그라데이션 (button-colorful 디자인 참고).
+     어두운 베이스 위에 그라데이션을 얹어 흰 텍스트 대비를 유지합니다. */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-brand transition hover:bg-brand-700 active:scale-[0.98];
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-6 py-3 text-base font-semibold text-white transition-all duration-300 active:scale-[0.98];
+    background-color: #18181b;
+    background-image: linear-gradient(
+      90deg,
+      rgba(99, 102, 241, 0.55),
+      rgba(168, 85, 247, 0.55),
+      rgba(236, 72, 153, 0.55)
+    );
+    box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.5);
   }
+  .btn-primary:hover {
+    background-image: linear-gradient(
+      90deg,
+      rgba(99, 102, 241, 0.7),
+      rgba(168, 85, 247, 0.7),
+      rgba(236, 72, 153, 0.7)
+    );
+  }
+
+  /* 보조 버튼 — 리퀴드 글래스 */
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-brand-300 hover:text-brand-700;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl border border-white/60 px-6 py-3 text-base font-semibold text-slate-700 backdrop-blur-md transition hover:text-brand-700;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow:
+      inset 1px 1px 1px rgba(255, 255, 255, 0.65),
+      inset -1px -1px 1px rgba(255, 255, 255, 0.3),
+      0 6px 18px -10px rgba(15, 23, 42, 0.3);
   }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  /* 리퀴드 글래스 표면 유틸 */
+  .glass {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+      inset 1px 1px 1px rgba(255, 255, 255, 0.6),
+      0 8px 30px -12px rgba(15, 23, 42, 0.25);
+  }
+
+  /* 글래스 칩 */
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/60 px-3 py-1 text-sm font-medium text-brand-700 backdrop-blur;
+    background: rgba(238, 244, 255, 0.7);
   }
+
   .section-title {
     @apply text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl;
   }
