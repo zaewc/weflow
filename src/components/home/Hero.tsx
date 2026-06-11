@@ -24,16 +24,17 @@ export default function Hero() {
         pointerColor="120, 150, 255"
         containerClassName="absolute inset-0 h-full w-full"
       />
-      {/* 가독성 확보용 스크림 */}
+      {/* 가독성 확보용 스크림 — 텍스트가 있는 좌상단은 어둡게, 우하단은 투명하게
+          남겨 글래스가 컬러를 굴절하도록 함 */}
       <div
-        className="pointer-events-none absolute inset-0 bg-slate-950/30"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-950/70 via-slate-950/40 to-slate-950/10"
         aria-hidden
       />
       {/* 리퀴드 글래스 distortion 필터 정의 */}
       <GlassFilter />
 
       <div className="container-w relative z-10 py-16 sm:py-20 lg:py-28">
-        <p className="text-sm font-semibold text-brand-200 sm:text-base">
+        <p className="text-sm font-semibold text-brand-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] sm:text-base">
           랜딩&홈페이지 제작 · 광고 운영 · 검색 상단 노출 · 맞춤형 웹 솔루션
         </p>
 
@@ -44,7 +45,7 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="mt-5 max-w-2xl text-base text-white/85 sm:text-lg">
+        <p className="mt-5 max-w-2xl text-base text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] sm:text-lg">
           홈페이지 제작부터 광고 연동·운영 관리까지
           <br />
           단순 제작이 아닌 문의 구조까지 설계합니다.
@@ -55,15 +56,15 @@ export default function Hero() {
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href="/cases" className="inline-block">
-            <GlassEffect className="rounded-xl px-6 py-3">
-              <span className="text-base font-semibold text-white">
+            <GlassEffect className="items-center rounded-3xl px-8 py-4">
+              <span className="text-base font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                 성공 사례 보기
               </span>
             </GlassEffect>
           </Link>
           <Link href="/landing" className="inline-block">
-            <GlassEffect className="rounded-xl px-6 py-3">
-              <span className="text-base font-semibold text-white">
+            <GlassEffect className="items-center rounded-3xl px-8 py-4">
+              <span className="text-base font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                 WEFLOW 랜딩 페이지
               </span>
             </GlassEffect>
@@ -72,20 +73,21 @@ export default function Hero() {
 
         <div className="mt-10 flex flex-wrap gap-3">
           {BADGES.map(({ Icon, title, desc }) => (
-            <div
-              key={title}
-              className="inline-flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-md"
-            >
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/15 text-cyan-200">
-                <Icon className="h-5 w-5" />
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-white">
-                  {title}
+            <GlassEffect key={title} className="rounded-2xl px-4 py-3">
+              <div className="flex items-center gap-3">
+                <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/15 text-cyan-200">
+                  <Icon className="h-5 w-5" />
                 </span>
-                <span className="block text-xs text-white/70">{desc}</span>
-              </span>
-            </div>
+                <span>
+                  <span className="block text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                    {title}
+                  </span>
+                  <span className="block text-xs text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                    {desc}
+                  </span>
+                </span>
+              </div>
+            </GlassEffect>
           ))}
         </div>
       </div>
