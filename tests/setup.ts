@@ -41,6 +41,38 @@ vi.mock("next/link", () => ({
   },
 }));
 
+// jsdom이 제공하지 않는 브라우저 API 폴리필 — embla-carousel 등에서 필요
+if (typeof window !== "undefined" && !window.matchMedia) {
+  window.matchMedia = (query: string): MediaQueryList =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    }) as unknown as MediaQueryList;
+}
+
+class StubObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+}
+if (typeof globalThis.IntersectionObserver === "undefined") {
+  globalThis.IntersectionObserver =
+    StubObserver as unknown as typeof IntersectionObserver;
+}
+if (typeof globalThis.ResizeObserver === "undefined") {
+  globalThis.ResizeObserver =
+    StubObserver as unknown as typeof ResizeObserver;
+}
+
 afterEach(() => {
   cleanup();
   globalThis.__pathname = undefined;
