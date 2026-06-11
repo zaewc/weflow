@@ -78,39 +78,62 @@ body {
     @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
   }
 
-  /* CTA 버튼 — 컬러풀 그라데이션 (button-colorful 디자인 참고).
-     어두운 베이스 위에 그라데이션을 얹어 흰 텍스트 대비를 유지합니다. */
+  /* Hero보다 절제된 공통 CTA: 브랜드 그라데이션, 광택, 깊이감을 공유합니다. */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-6 py-3 text-base font-semibold text-white transition-all duration-300 active:scale-[0.98];
-    background-color: #18181b;
-    background-image: linear-gradient(
-      90deg,
-      rgba(99, 102, 241, 0.55),
-      rgba(168, 85, 247, 0.55),
-      rgba(236, 72, 153, 0.55)
+    @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border border-white/20 px-6 py-3 text-base font-bold tracking-tight text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98];
+    background:
+      linear-gradient(110deg, rgba(255, 255, 255, 0.16), transparent 38%),
+      linear-gradient(135deg, #3158e7 0%, #5146d8 52%, #7637bd 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 10px 24px -10px rgba(49, 70, 216, 0.75);
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
+  }
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      110deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.24) 44%,
+      transparent 68%
     );
-    box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.5);
+    transform: translateX(-120%);
+    transition: transform 650ms ease;
   }
   .btn-primary:hover {
-    background-image: linear-gradient(
-      90deg,
-      rgba(99, 102, 241, 0.7),
-      rgba(168, 85, 247, 0.7),
-      rgba(236, 72, 153, 0.7)
-    );
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      0 16px 30px -12px rgba(49, 70, 216, 0.82);
+  }
+  .btn-primary:hover::before {
+    transform: translateX(120%);
+  }
+  .btn-primary:disabled {
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 
-  /* 보조 버튼 — 리퀴드 글래스 */
+  /* 보조 CTA도 동일한 곡률과 상호작용을 사용하되 시각적 위계는 낮춥니다. */
   .btn-ghost {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-xl border border-white/60 px-6 py-3 text-base font-semibold text-slate-700 backdrop-blur-md transition hover:text-brand-700;
-    background: rgba(255, 255, 255, 0.55);
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl border border-brand-100 px-6 py-3 text-base font-bold tracking-tight text-slate-700 backdrop-blur-md transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98];
+    background: rgba(255, 255, 255, 0.78);
     box-shadow:
-      inset 1px 1px 1px rgba(255, 255, 255, 0.65),
-      inset -1px -1px 1px rgba(255, 255, 255, 0.3),
-      0 6px 18px -10px rgba(15, 23, 42, 0.3);
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 8px 20px -14px rgba(49, 70, 216, 0.5);
   }
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.72);
+    transform: translateY(-2px);
+    border-color: rgba(49, 88, 231, 0.28);
+    background: rgba(255, 255, 255, 0.96);
+    color: #3158e7;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      0 14px 24px -14px rgba(49, 70, 216, 0.55);
   }
 
   /* 리퀴드 글래스 표면 유틸 */
@@ -128,6 +151,20 @@ body {
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border border-white/60 px-3 py-1 text-sm font-medium text-brand-700 backdrop-blur;
     background: rgba(238, 244, 255, 0.7);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary,
+    .btn-primary::before,
+    .btn-ghost {
+      transition-duration: 0.01ms;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:hover::before,
+    .btn-ghost:hover {
+      transform: none;
+    }
   }
 
   .section-title {

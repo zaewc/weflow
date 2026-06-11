@@ -56,18 +56,20 @@ export default function Hero() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <AnimatedGradientButton href="/diagnosis">
+          <AnimatedGradientButton href="/diagnosis" className="h-12 text-base">
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
           </AnimatedGradientButton>
           <GlassButton
-            size="lg"
+            size="default"
+            className="h-12 rounded-xl text-base font-bold"
             contentClassName="!text-white"
             onClick={() => router.push("/cases")}
           >
             성공 사례 보기
           </GlassButton>
           <GlassButton
-            size="lg"
+            size="default"
+            className="h-12 rounded-xl text-base font-bold"
             contentClassName="!text-white"
             onClick={() => router.push("/landing")}
           >
@@ -75,23 +77,17 @@ export default function Hero() {
           </GlassButton>
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4">
           {BADGES.map(({ Icon, title, desc }) => (
-            <GlassEffect key={title} className="rounded-2xl px-4 py-3">
-              <div className="flex items-center gap-3">
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/15 text-cyan-200">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                    {title}
-                  </span>
-                  <span className="block text-xs text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                    {desc}
-                  </span>
-                </span>
+            <div key={title} className="flex items-center gap-3">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white">
+                <Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-white">{title}</p>
+                <p className="text-xs text-white/80">{desc}</p>
               </div>
-            </GlassEffect>
+            </div>
           ))}
         </div>
       </div>
