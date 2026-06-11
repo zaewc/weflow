@@ -187,6 +187,7 @@ export default function AdminPage() {
           </div>
           <input
             type="password"
+            aria-label="관리자 키"
             value={keyInput}
             onChange={(e) => setKeyInput(e.target.value)}
             placeholder="관리자 키"
