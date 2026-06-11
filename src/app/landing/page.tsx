@@ -8,16 +8,14 @@ import {
   Megaphone,
   Target,
   ArrowRight,
-  Search,
-  Palette,
-  BarChart3,
-  MessageSquarePlus,
 } from "lucide-react";
 import SubmissionForm from "@/components/SubmissionForm";
 import PlanCardView from "@/components/PlanCard";
 import ProcessSection from "@/components/ProcessSection";
 import ReviewMarquee from "@/components/ReviewMarquee";
+import SectionHeading from "@/components/SectionHeading";
 import { PRODUCTION_PLANS, CARE_PLANS, AD_PLANS } from "@/lib/pricing";
+import { DIAGNOSIS_CHECKS } from "@/lib/diagnosis";
 
 export const metadata: Metadata = {
   title: "WEFLOW 랜딩 페이지 | 문의로 이어지는 홈페이지",
@@ -59,13 +57,6 @@ const FEATURES = [
 ];
 
 const ALL_PLANS = [...PRODUCTION_PLANS, ...CARE_PLANS, ...AD_PLANS];
-
-const CHECKS = [
-  { Icon: Search, label: "문의 구조 진단" },
-  { Icon: Palette, label: "디자인 점검" },
-  { Icon: BarChart3, label: "검색 노출 분석" },
-  { Icon: MessageSquarePlus, label: "문의 개선 제안" },
-];
 
 export default function LandingPage() {
   return (
@@ -150,10 +141,7 @@ export default function LandingPage() {
       {/* 가격 카드 8개 */}
       <section className="bg-slate-50 py-16">
         <div className="container-w">
-          <div className="mb-10 text-center">
-            <span className="chip">PRICE</span>
-            <h2 className="section-title mt-3">전체 플랜 한눈에 보기</h2>
-          </div>
+          <SectionHeading eyebrow="PRICE" title="전체 플랜 한눈에 보기" />
           <div className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4">
             {ALL_PLANS.map((plan) => (
               <PlanCardView key={`${plan.name}-${plan.newPrice}`} plan={plan} />
@@ -172,7 +160,7 @@ export default function LandingPage() {
             무료진단에서 이런 걸 확인해드립니다
           </h2>
           <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
-            {CHECKS.map(({ Icon, label }) => (
+            {DIAGNOSIS_CHECKS.map(({ Icon, label }) => (
               <div
                 key={label}
                 className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-5"

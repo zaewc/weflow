@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import { Search, Palette, BarChart3, MessageSquarePlus } from "lucide-react";
 import SubmissionForm from "@/components/SubmissionForm";
+import { DIAGNOSIS_CHECKS } from "@/lib/diagnosis";
 
 export const metadata: Metadata = {
   title: "무료진단 받기 | WEFLOW",
   description:
     "지금 바로 무료 진단받고 사이트의 숨겨진 잠재력을 발견하세요. 문의 구조 진단 · 디자인 점검 · 검색 노출 분석 · 문의 개선 제안.",
 };
-
-const CHECKS = [
-  { Icon: Search, label: "문의 구조 진단" },
-  { Icon: Palette, label: "디자인 점검" },
-  { Icon: BarChart3, label: "검색 노출 분석" },
-  { Icon: MessageSquarePlus, label: "문의 개선 제안" },
-];
 
 export default function DiagnosisPage() {
   return (
@@ -30,7 +23,7 @@ export default function DiagnosisPage() {
           </p>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
-            {CHECKS.map(({ Icon, label }) => (
+            {DIAGNOSIS_CHECKS.map(({ Icon, label }) => (
               <div
                 key={label}
                 className="flex items-center gap-3 rounded-xl border border-brand-100 bg-white px-4 py-4"
