@@ -13,7 +13,7 @@ function Card({ review }: { review: Review }) {
       <p className="mb-3 text-sm leading-relaxed text-slate-700">
         “{review.text}”
       </p>
-      <p className="text-xs font-semibold text-slate-400">- {review.author}</p>
+      <p className="text-xs font-semibold text-slate-500">- {review.author}</p>
     </div>
   );
 }
