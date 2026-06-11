@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Logo from "@/components/Logo";
 import Footer from "@/components/Footer";
 import FloatingBar from "@/components/FloatingBar";
@@ -111,9 +111,14 @@ describe("StatusBadge", () => {
 });
 
 describe("home sections", () => {
-  it("renders Hero", () => {
+  it("renders Hero and navigates from the liquid-glass buttons", () => {
     render(<Hero />);
     expect(screen.getByText("무료 진단 신청")).toBeInTheDocument();
+    // 리퀴드 글래스 버튼(LiquidButton) 클릭 → 라우팅 핸들러 실행
+    fireEvent.click(screen.getByRole("button", { name: "성공 사례 보기" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "WEFLOW 랜딩 페이지" }),
+    );
   });
   it("renders CarePlanBenefits", () => {
     render(<CarePlanBenefits />);
