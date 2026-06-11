@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Rocket, ShieldCheck, Wallet } from "lucide-react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
-import { GlassEffect, GlassFilter } from "@/components/ui/liquid-glass";
+import { GlassEffect } from "@/components/ui/liquid-glass";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 const BADGES = [
   { Icon: ShieldCheck, title: "케어 플랜", desc: "제작·광고·운영" },
@@ -10,6 +14,8 @@ const BADGES = [
 ];
 
 export default function Hero() {
+  const router = useRouter();
+
   return (
     <section className="relative overflow-hidden">
       {/* 애니메이션 그라데이션 배경 (브랜드 톤) */}
@@ -22,6 +28,7 @@ export default function Hero() {
         fourthColor="124, 58, 237"
         fifthColor="56, 189, 248"
         pointerColor="120, 150, 255"
+        interactive={false}
         containerClassName="absolute inset-0 h-full w-full"
       />
       {/* 가독성 확보용 스크림 — 텍스트가 있는 좌상단은 어둡게, 우하단은 투명하게
@@ -30,8 +37,6 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-950/70 via-slate-950/40 to-slate-950/10"
         aria-hidden
       />
-      {/* 리퀴드 글래스 distortion 필터 정의 */}
-      <GlassFilter />
 
       <div className="container-w relative z-10 py-16 sm:py-20 lg:py-28">
         <p className="text-sm font-semibold text-brand-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] sm:text-base">
@@ -51,24 +56,24 @@ export default function Hero() {
           단순 제작이 아닌 문의 구조까지 설계합니다.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link href="/diagnosis" className="btn-primary">
             무료 진단 신청 <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link href="/cases" className="inline-block">
-            <GlassEffect className="items-center rounded-3xl px-8 py-4">
-              <span className="text-base font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                성공 사례 보기
-              </span>
-            </GlassEffect>
-          </Link>
-          <Link href="/landing" className="inline-block">
-            <GlassEffect className="items-center rounded-3xl px-8 py-4">
-              <span className="text-base font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                WEFLOW 랜딩 페이지
-              </span>
-            </GlassEffect>
-          </Link>
+          <LiquidButton
+            size="lg"
+            className="text-white"
+            onClick={() => router.push("/cases")}
+          >
+            성공 사례 보기
+          </LiquidButton>
+          <LiquidButton
+            size="lg"
+            className="text-white"
+            onClick={() => router.push("/landing")}
+          >
+            WEFLOW 랜딩 페이지
+          </LiquidButton>
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
