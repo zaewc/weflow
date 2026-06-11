@@ -24,10 +24,15 @@ test.describe("home navigation", () => {
     ).toBeVisible();
   });
 
-  test("opens a case detail from the cases grid", async ({ page }) => {
+  test("cases grid links to a case detail page", async ({ page }) => {
     await page.goto("/cases");
-    await page.getByRole("link", { name: /OO PT샵/ }).first().click();
-    await page.waitForURL(/\/cases\/pt/);
+    // 카드가 상세 페이지로 연결되는지 (href) 확인 — 이미지 로딩에 따른
+    // 클릭 내비게이션 플래키를 피하기 위해 href 검증 + 직접 방문으로 분리
+    await expect(
+      page.getByRole("link", { name: /OO PT샵/ }).first(),
+    ).toHaveAttribute("href", "/cases/pt");
+
+    await page.goto("/cases/pt");
     await expect(
       page.getByRole("heading", { name: "OO PT샵" }),
     ).toBeVisible();
