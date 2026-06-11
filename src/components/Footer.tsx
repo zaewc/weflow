@@ -22,12 +22,12 @@ export default function Footer() {
         <div className="space-y-4">
           <Logo />
           <p className="text-sm text-slate-600">{SITE.tagline}</p>
-          <dl className="space-y-1 text-sm text-slate-500">
-            <div>대표 : {SITE.ceo}</div>
-            <div>사업자등록번호 : {SITE.bizNo}</div>
-            <div>이메일 : {SITE.email}</div>
-            <div>운영시간 : {SITE.hours}</div>
-          </dl>
+          <div className="space-y-1 text-sm text-slate-600">
+            <p>대표 : {SITE.ceo}</p>
+            <p>사업자등록번호 : {SITE.bizNo}</p>
+            <p>이메일 : {SITE.email}</p>
+            <p>운영시간 : {SITE.hours}</p>
+          </div>
         </div>
 
         <div>
