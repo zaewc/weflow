@@ -11,6 +11,7 @@ import {
   Tag,
   Trophy,
   CalendarDays,
+  ClipboardCheck,
   type LucideIcon,
 } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -18,7 +19,14 @@ import { LimelightNav, type NavItem } from "@/components/ui/limelight-nav";
 import { NAV } from "@/lib/site";
 
 // NAV 순서와 1:1 대응하는 아이콘
-const NAV_ICONS: LucideIcon[] = [Home, LayoutGrid, Tag, Trophy, CalendarDays];
+const NAV_ICONS: LucideIcon[] = [
+  Home,
+  LayoutGrid,
+  Tag,
+  Trophy,
+  CalendarDays,
+  ClipboardCheck,
+];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -53,15 +61,9 @@ export default function Header() {
             items={navItems}
             defaultActiveIndex={activeIndex}
             className="border-slate-200 bg-white/60"
-            iconContainerClassName="min-w-[7.5rem]"
+            iconContainerClassName="min-w-[6.5rem]"
             iconClassName="text-brand-600"
           />
-        </div>
-
-        <div className="hidden lg:block">
-          <Link href="/diagnosis" className="btn-primary px-4 py-2 text-sm">
-            무료 진단 신청
-          </Link>
         </div>
 
         <button
