@@ -31,11 +31,8 @@ test.describe("메뉴얼 — 카테고리 네비게이션", () => {
     await expect(
       page.getByRole("heading", { name: "상담 예약" }),
     ).toBeVisible();
-  });
 
-  test("무료진단은 헤더 CTA로 접근", async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("link", { name: "무료 진단 신청" }).first().click();
+    await page.getByRole("link", { name: "무료진단받기" }).first().click();
     await page.waitForURL(/\/diagnosis/);
     await expect(
       page.getByRole("heading", { name: "무료진단 받기" }),
