@@ -81,6 +81,10 @@ function installFetch() {
         if (listShouldThrow) throw new Error("boom");
         return { status: 200, json: async () => ({ items }) };
       }
+      // CaseManager가 마운트 시 호출 — 빈 목록 반환
+      if (url.startsWith("/api/cases") && method === "GET") {
+        return { status: 200, ok: true, json: async () => ({ items: [] }) };
+      }
       if (url.startsWith("/api/submissions/") && method === "PATCH") {
         const id = url.split("/").pop()!;
         const body = JSON.parse(opts!.body as string);

@@ -32,8 +32,9 @@ function parseMetrics(text: string): CaseMetric[] {
   return text
     .split("\n")
     .map((line) => {
-      const [label, ...rest] = line.split(",");
-      return { label: (label ?? "").trim(), value: rest.join(",").trim() };
+      const parts = line.split(",");
+      // split은 항상 최소 1개 요소를 반환하므로 parts[0]은 존재한다.
+      return { label: parts[0]!.trim(), value: parts.slice(1).join(",").trim() };
     })
     .filter((m) => m.label && m.value);
 }
@@ -64,7 +65,7 @@ export default function CaseManager({ adminKey }: { adminKey: string }) {
   }, []);
 
   useEffect(() => {
-    load();
+    load().catch(() => undefined);
   }, [load]);
 
   function startCreate() {
