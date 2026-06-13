@@ -21,8 +21,9 @@ describe("site constants", () => {
   it("exposes external links and nav", () => {
     expect(LINKS.kakao).toContain("kakao");
     expect(LINKS.phone).toBe("tel:010-2971-7280");
-    expect(NAV).toHaveLength(5);
+    expect(NAV).toHaveLength(6);
     expect(NAV[0]).toEqual({ label: "홈", href: "/" });
+    expect(NAV[5]).toEqual({ label: "무료진단받기", href: "/diagnosis" });
     expect(PROJECT_TYPES).toHaveLength(4);
   });
 });
