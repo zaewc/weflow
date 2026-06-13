@@ -2,85 +2,182 @@
 
 [![CI](https://github.com/zaewc/weflow/actions/workflows/ci.yml/badge.svg)](https://github.com/zaewc/weflow/actions/workflows/ci.yml)
 
-문의로 이어지는 홈페이지 — 랜딩/홈페이지 제작 · 광고 운영 · 검색 상단 노출.
-Next.js 14 (App Router) · TypeScript(strict) · Tailwind CSS.
+문의 전환을 목표로 하는 WEFLOW 공식 웹사이트입니다. 서비스·가격·성공사례를 소개하고, 무료진단과 상담 예약 접수부터 관리자 처리 및 엑셀 내보내기까지 제공합니다.
 
-## 개발
+## 기술 스택
+
+- Next.js 14 App Router, React 18, TypeScript strict
+- Tailwind CSS, shadcn/ui 구조, Motion, Lucide React
+- Upstash Redis 또는 로컬 JSON 파일 저장소
+- Vitest, React Testing Library, Playwright, Lighthouse CI
+- Vercel, GitHub Actions
+
+## 시작하기
+
+Node.js 20 이상을 권장합니다.
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
-npm run typecheck    # 타입 검사 (strict)
-npm run lint         # ESLint
-npm run build        # 프로덕션 빌드
+npm run dev
 ```
 
-KV 환경변수가 없으면 예약/문의 데이터는 `data/submissions.json` 파일에 저장됩니다(로컬 개발용).
+개발 서버는 기본적으로 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
-## 테스트
+### 환경변수
 
-```bash
-npm test             # 단위/통합 테스트 (Vitest)
-npm run test:cov     # 커버리지 (statements/branches/functions/lines 100% 임계값 강제)
-npm run e2e          # E2E 테스트 (Playwright, 최초 1회 `npx playwright install chromium` 필요)
-npm run build && npm run lhci   # Lighthouse 측정 + 임계값 검증 (Chrome 필요)
+루트에 `.env.local`을 생성합니다.
+
+```dotenv
+ADMIN_KEY=change-this-admin-key
+
+# Vercel KV 호환 이름
+KV_REST_API_URL=
+KV_REST_API_TOKEN=
+
+# 또는 Upstash 기본 이름
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
-Lighthouse 기준(`lighthouserc.json`): 성능 ≥ 90, 접근성 · 모범사례 · SEO = 100. (현재 /, /pricing, /landing, /diagnosis 4개 페이지 모두 100/100/100/100)
+| 변수 | 설명 |
+| --- | --- |
+| `ADMIN_KEY` | 관리자 API 및 `/admin` 로그인 키 |
+| `KV_REST_API_URL` | Redis REST URL |
+| `KV_REST_API_TOKEN` | Redis REST 토큰 |
+| `UPSTASH_REDIS_REST_URL` | `KV_REST_API_URL`의 대체 이름 |
+| `UPSTASH_REDIS_REST_TOKEN` | `KV_REST_API_TOKEN`의 대체 이름 |
 
-- **단위/통합**: `tests/lib`(데이터·검증·인증·저장소), `tests/api`(라우트 핸들러), `tests/components`·`tests/pages`(RTL). 커버리지 100% 유지.
-- **E2E**: `tests/e2e` — 네비게이션, 무료진단/예약 접수, 관리자 로그인·상태변경 플로우.
+`ADMIN_KEY`가 없으면 개발 기본값 `weflow2026`을 사용합니다. 배포 환경에서는 반드시 별도 값을 설정해야 합니다.
+
+Redis URL과 토큰이 모두 없으면 접수 데이터는 `data/submissions.json`에 저장됩니다. 이 방식은 로컬 개발용이며 서버리스 배포의 영속 저장소로 사용할 수 없습니다.
+
+## 주요 기능
+
+- 반응형 홈과 서비스·가격·성공사례 소개
+- Motion 기반 CTA, 글래스 UI, 하단 퀵 메뉴 Dock
+- 무료진단 문의 및 날짜·시간 기반 상담 예약
+- 요청 데이터 검증과 파일/Redis 저장소 자동 전환
+- 관리자 키 인증, 5초 주기 자동 갱신
+- 접수 상태 변경, 삭제, 상태 필터
+- 예약·문의별 또는 전체 Excel 다운로드
+- 관리자 페이지에서 공용 헤더·푸터·Dock 자동 제외
 
 ## 페이지
 
 | 경로 | 설명 |
 | --- | --- |
-| `/` | 홈 (히어로 · 케어플랜 혜택 · 성공사례 · 제작 프로세스 · 후기) |
-| `/services` | 6단계 제작 프로세스 · 광고/SEO 사후관리 시스템 |
-| `/pricing` | 제작/케어/광고 플랜 가격 |
-| `/cases`, `/cases/[slug]` | 성공사례 목록 · 상세 |
-| `/reservation` | 달력 + 시간대 예약 |
-| `/diagnosis` | 무료진단 신청 |
-| `/landing` | 랜딩 페이지 (사이드 고정 문의창) |
-| `/admin` | 관리자 대시보드 (예약/문의 관리 · 엑셀 다운로드) |
+| `/` | 홈: Hero, 케어 플랜, 성공사례, 제작 과정, 후기 |
+| `/services` | 제작 프로세스와 광고·SEO 운영 안내 |
+| `/pricing` | 제작·케어·광고 플랜 |
+| `/cases` | 이미지 기반 성공사례 목록 |
+| `/cases/[slug]` | 성공사례 상세 |
+| `/reservation` | 날짜와 시간대 상담 예약 |
+| `/diagnosis` | 무료진단 문의 접수 |
+| `/landing` | 전환형 랜딩 페이지와 고정 문의 폼 |
+| `/showcase` | 글래스 Dock과 버튼 UI 컴포넌트 쇼케이스 |
+| `/privacy` | 개인정보처리방침 |
+| `/terms` | 이용약관 |
+| `/admin` | 예약·문의 관리자 대시보드 |
 
-## 관리자
+## API
 
-- 경로: `/admin`
-- 키: `ADMIN_KEY` 환경변수 (미설정 시 기본값 `weflow2026`)
-- 기능: 상태(대기/진행중/완료) 변경 · 삭제 · 상세 펼침 · 섹션별/전체 엑셀(.xlsx) 다운로드 · 5초 폴링 실시간 갱신
+관리자 요청은 `x-admin-key` 헤더가 필요합니다.
+
+| Method | 경로 | 설명 | 인증 |
+| --- | --- | --- | --- |
+| `POST` | `/api/submissions` | 예약 또는 문의 접수 | 없음 |
+| `GET` | `/api/submissions` | 전체 접수 목록 | 관리자 |
+| `PATCH` | `/api/submissions/[id]` | 상태 변경 | 관리자 |
+| `DELETE` | `/api/submissions/[id]` | 접수 삭제 | 관리자 |
+| `GET` | `/api/export?kind=all` | Excel 다운로드 | 관리자 |
+
+`kind`에는 `all`, `reservation`, `inquiry`를 사용할 수 있습니다. 상태값은 `pending`, `in_progress`, `done`입니다.
+
+## 명령어
+
+```bash
+npm run dev        # 개발 서버
+npm run build      # 프로덕션 빌드
+npm run start      # 프로덕션 서버
+npm run lint       # ESLint
+npm run typecheck  # TypeScript 검사
+npm test           # Vitest 단위·통합 테스트
+npm run test:watch # Vitest 감시 모드
+npm run test:cov   # 100% 임계값 커버리지 검사
+npm run e2e        # Playwright E2E
+npm run lhci       # Lighthouse CI
+```
+
+Playwright를 처음 실행할 때 Chromium 설치가 필요합니다.
+
+```bash
+npx playwright install chromium
+```
+
+## 테스트와 품질 기준
+
+- `tests/lib`: 검증, 인증, 데이터, 저장소
+- `tests/api`: 접수·상태 변경·삭제·Excel API
+- `tests/components`: 공용 UI, 폼, 관리자 컴포넌트
+- `tests/pages`: 페이지 렌더링
+- `tests/e2e`: 내비게이션, 접수, 예약, 관리자 흐름
+- `tests/spec`: 페이지 및 매뉴얼 데이터 요구사항
+
+Vitest 커버리지 기준은 statements, branches, functions, lines 모두 100%입니다. `src/components/ui`의 벤더 UI 컴포넌트는 커버리지 대상에서 제외됩니다.
+
+Lighthouse는 `/`, `/pricing`, `/landing`, `/diagnosis`를 데스크톱 프리셋으로 3회 측정하고 중앙값을 사용합니다.
+
+| 항목 | 최소 점수 |
+| --- | --- |
+| Performance | 70 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+| SEO | 100 |
+
+## 프로젝트 구조
+
+```text
+src/
+├── app/                 # 페이지와 Route Handler
+├── components/
+│   ├── admin/           # 관리자 UI
+│   ├── home/            # 홈 전용 섹션
+│   └── ui/              # shadcn 및 커스텀 UI 컴포넌트
+└── lib/                 # 인증, 저장소, 검증, 정적 데이터
+tests/
+├── api/
+├── components/
+├── e2e/
+├── lib/
+├── pages/
+└── spec/
+public/                  # 로고와 성공사례 이미지
+data/                    # 로컬 접수 데이터
+```
 
 ## CI/CD
 
-GitHub Actions로 구성되어 있습니다.
+`main` push와 PR에서 GitHub Actions CI가 다음 작업을 병렬 실행합니다.
 
-- **CI** (`.github/workflows/ci.yml`) — `main` push / PR 시 3개 잡 병렬 실행:
-  - `quality`: lint · typecheck · build
-  - `test`: Vitest 커버리지 (100% 임계값, 미달 시 실패) — 리포트 아티팩트 업로드
-  - `e2e`: Playwright(Chromium) E2E — 실패 시 리포트 아티팩트 업로드
-- **CD** (`.github/workflows/deploy.yml`) — CI 성공 후 `main`을 Vercel 프로덕션에 배포.
+- `quality`: lint, typecheck, production build
+- `test`: Vitest 100% 커버리지 및 리포트 업로드
+- `e2e`: Chromium Playwright 및 실패 리포트 업로드
+- `lighthouse`: 프로덕션 빌드 기반 Lighthouse 검사
 
-### 배포 Secret 설정
-
-저장소 **Settings → Secrets and variables → Actions**에 아래 3개를 등록하면 자동 배포됩니다. (없으면 배포 잡은 경고만 남기고 건너뜁니다.)
+CI 성공 후 `deploy.yml`이 Vercel 프로덕션 배포를 실행합니다. 자동 배포에는 다음 GitHub Actions Secret이 필요합니다.
 
 | Secret | 설명 |
 | --- | --- |
-| `VERCEL_TOKEN` | Vercel 계정 토큰 (Account Settings → Tokens) |
-| `VERCEL_ORG_ID` | `vercel link` 후 `.vercel/project.json`에서 확인 |
-| `VERCEL_PROJECT_ID` | 동일 파일에서 확인 |
+| `VERCEL_TOKEN` | Vercel 계정 토큰 |
+| `VERCEL_ORG_ID` | Vercel 조직 ID |
+| `VERCEL_PROJECT_ID` | Vercel 프로젝트 ID |
 
-> Vercel 대시보드의 Git 연동으로도 자동 배포가 가능합니다. 그 경우 `deploy.yml`은 비활성화(삭제)해도 됩니다.
+`VERCEL_TOKEN`이 없으면 배포 단계는 실패 처리 없이 건너뜁니다.
 
-## Vercel 배포 (영속 저장소)
+## 연락처
 
-1. GitHub에 푸시 후 Vercel에서 Import.
-2. **Storage → Marketplace → Upstash (Redis)** 통합을 추가하면 `KV_REST_API_URL`, `KV_REST_API_TOKEN`이 프로젝트에 자동 주입됩니다.
-3. **Settings → Environment Variables**에 `ADMIN_KEY`를 설정.
-4. 재배포하면 예약/문의가 Redis에 영속 저장됩니다.
+사이트 정보와 외부 채널 주소는 `src/lib/site.ts`에서 관리합니다.
 
-> 저장소 분기 로직은 `src/lib/store.ts` 한 곳에 있습니다. KV 환경변수가 있으면 Redis, 없으면 파일 저장소를 사용합니다.
-
-## 외부 링크 / 연락처
-
-전화 `010-2971-7280` · 이메일 `contact@weflowlab.kr` · 카카오/블로그/인스타/페이스북 채널 연결 (`src/lib/site.ts`).
+- 전화: `010-2971-7280`
+- 이메일: `contact@weflowlab.kr`
+- 카카오톡, 네이버 블로그, Instagram, Facebook 연결
