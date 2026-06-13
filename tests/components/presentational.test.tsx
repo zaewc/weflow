@@ -125,7 +125,7 @@ describe("home sections", () => {
     expect(screen.getByText("WEFLOW만의 케어 플랜 혜택")).toBeInTheDocument();
   });
   it("renders SuccessShowcase", () => {
-    render(<SuccessShowcase />);
+    render(<SuccessShowcase cases={CASES} />);
     expect(screen.getByText("성공사례")).toBeInTheDocument();
     // 살펴보기 / 더보기 모두 문의창(무료진단)으로
     expect(screen.getByText("살펴보기").closest("a")).toHaveAttribute(

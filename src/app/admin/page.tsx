@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, LogOut, Download, Loader2, ShieldCheck } from "lucide-react";
 import SubmissionTable from "@/components/admin/SubmissionTable";
+import CaseManager from "@/components/admin/CaseManager";
 import type {
   Submission,
   SubmissionKind,
@@ -271,6 +272,8 @@ export default function AdminPage() {
           onDelete={remove}
           onExport={() => download("inquiry")}
         />
+
+        <CaseManager adminKey={adminKey} />
       </main>
     </div>
   );

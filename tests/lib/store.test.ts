@@ -1,23 +1,30 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { NewSubmission } from "@/lib/types";
+import type { NewCase } from "@/lib/cases";
+import { CASES } from "@/lib/cases";
 
 // 공유 인메모리 상태 (mock 팩토리와 테스트가 함께 접근)
 const mem = vi.hoisted(() => ({
-  // file 백엔드
-  file: { content: null as string | null, threwOnRead: false },
+  // file 백엔드 (접수 / 성공사례 별도 파일)
+  file: { content: null as string | null },
+  casesFile: { content: null as string | null },
   // redis 백엔드
   hashes: new Map<string, Record<string, unknown>>(),
   zset: [] as { score: number; member: string }[],
+  kv: new Map<string, unknown>(),
 }));
 
 vi.mock("fs", () => {
+  const slotFor = (p: string) =>
+    p.includes("cases.json") ? mem.casesFile : mem.file;
   const promises = {
-    readFile: vi.fn(async () => {
-      if (mem.file.content === null) throw new Error("ENOENT");
-      return mem.file.content;
+    readFile: vi.fn(async (p: string) => {
+      const slot = slotFor(p);
+      if (slot.content === null) throw new Error("ENOENT");
+      return slot.content;
     }),
-    writeFile: vi.fn(async (_path: string, data: string) => {
-      mem.file.content = data;
+    writeFile: vi.fn(async (p: string, data: string) => {
+      slotFor(p).content = data;
     }),
     mkdir: vi.fn(async () => undefined),
   };
@@ -63,9 +70,25 @@ vi.mock("@upstash/redis", () => {
     async del(key: string) {
       mem.hashes.delete(key);
     }
+    async get<T>(key: string): Promise<T | null> {
+      return mem.kv.has(key) ? (mem.kv.get(key) as T) : null;
+    }
+    async set(key: string, value: unknown) {
+      mem.kv.set(key, value);
+    }
   }
   return { Redis: FakeRedis };
 });
+
+const caseInput: NewCase = {
+  name: "OO 신규샵",
+  category: "신규업종",
+  summary: "신규 성공사례",
+  image: "/cases_new.jpg",
+  gradient: "from-brand-500 to-brand-700",
+  metrics: [{ label: "문의", value: "+100%" }],
+  highlights: ["포인트1"],
+};
 
 const input: NewSubmission = {
   kind: "inquiry",
@@ -84,8 +107,10 @@ async function freshStore() {
 
 beforeEach(() => {
   mem.file.content = null;
+  mem.casesFile.content = null;
   mem.hashes.clear();
   mem.zset = [];
+  mem.kv.clear();
   delete process.env.KV_REST_API_URL;
   delete process.env.KV_REST_API_TOKEN;
   delete process.env.UPSTASH_REDIS_REST_URL;
@@ -173,5 +198,78 @@ describe("store (redis backend)", () => {
     const store = await freshStore();
     await store.createSubmission(input);
     expect(mem.hashes.size).toBe(1);
+  });
+});
+
+describe("cases store (file backend)", () => {
+  it("seeds defaults when nothing is stored yet", async () => {
+    const store = await freshStore();
+    const list = await store.listCases();
+    expect(list).toHaveLength(CASES.length);
+    expect(list[0]!.slug).toBe(CASES[0]!.slug);
+    // 시드가 파일에 기록됨
+    expect(mem.casesFile.content).not.toBeNull();
+  });
+
+  it("treats a non-array file as unset and seeds", async () => {
+    mem.casesFile.content = JSON.stringify({ not: "array" });
+    const store = await freshStore();
+    expect(await store.listCases()).toHaveLength(CASES.length);
+  });
+
+  it("respects a stored empty array (no reseed)", async () => {
+    mem.casesFile.content = "[]";
+    const store = await freshStore();
+    expect(await store.listCases()).toEqual([]);
+  });
+
+  it("gets a case by slug and returns null for unknown", async () => {
+    const store = await freshStore();
+    expect((await store.getCase(CASES[0]!.slug))?.slug).toBe(CASES[0]!.slug);
+    expect(await store.getCase("nope")).toBeNull();
+  });
+
+  it("creates, updates and deletes", async () => {
+    const store = await freshStore();
+    const created = await store.createCase(caseInput);
+    expect(created.slug).toBeTruthy();
+    expect(await store.listCases()).toHaveLength(CASES.length + 1);
+
+    const updated = await store.updateCase(created.slug, {
+      ...caseInput,
+      name: "수정됨",
+    });
+    expect(updated?.name).toBe("수정됨");
+    expect(updated?.slug).toBe(created.slug);
+    expect(await store.updateCase("missing", caseInput)).toBeNull();
+
+    expect(await store.deleteCase(created.slug)).toBe(true);
+    expect(await store.deleteCase("missing")).toBe(false);
+    expect(await store.listCases()).toHaveLength(CASES.length);
+  });
+});
+
+describe("cases store (redis backend)", () => {
+  beforeEach(() => {
+    process.env.KV_REST_API_URL = "https://example.upstash.io";
+    process.env.KV_REST_API_TOKEN = "token";
+  });
+
+  it("seeds defaults then creates/updates/deletes via redis", async () => {
+    const store = await freshStore();
+    expect(await store.listCases()).toHaveLength(CASES.length);
+
+    const created = await store.createCase(caseInput);
+    expect(await store.listCases()).toHaveLength(CASES.length + 1);
+    expect((await store.getCase(created.slug))?.name).toBe(caseInput.name);
+
+    const updated = await store.updateCase(created.slug, {
+      ...caseInput,
+      name: "레디스수정",
+    });
+    expect(updated?.name).toBe("레디스수정");
+
+    expect(await store.deleteCase(created.slug)).toBe(true);
+    expect(await store.listCases()).toHaveLength(CASES.length);
   });
 });

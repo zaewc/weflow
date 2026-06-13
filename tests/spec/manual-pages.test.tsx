@@ -2,8 +2,15 @@
  * 메뉴얼 — 페이지/컴포넌트 렌더 명세 검증 (Integration)
  * 실제 화면에 메뉴얼이 요구하는 텍스트/요소가 나타나는지 확인한다.
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { CASES } from "@/lib/cases";
+
+// 홈/성공사례 페이지는 저장소에서 성공사례를 읽으므로 기본 시드로 모킹한다.
+vi.mock("@/lib/store", () => ({
+  listCases: vi.fn(async () => CASES),
+  getCase: vi.fn(async (slug: string) => CASES.find((c) => c.slug === slug) ?? null),
+}));
 
 import HomePage from "@/app/page";
 import ServicesPage from "@/app/services/page";
@@ -16,8 +23,8 @@ import Footer from "@/components/Footer";
 import FloatingBar from "@/components/FloatingBar";
 
 describe("메뉴얼 page1/2 — 홈 화면", () => {
-  it("메인 배너 문구 & 3개 버튼", () => {
-    render(<HomePage />);
+  it("메인 배너 문구 & 3개 버튼", async () => {
+    render(await HomePage());
     expect(
       screen.getByText(
         "랜딩&홈페이지 제작 · 광고 운영 · 검색 상단 노출 · 맞춤형 웹 솔루션",
@@ -36,8 +43,8 @@ describe("메뉴얼 page1/2 — 홈 화면", () => {
     ).toBeInTheDocument();
   });
 
-  it("작은 박스 3종 (케어플랜/빠른제작/합리적 비용)", () => {
-    render(<HomePage />);
+  it("작은 박스 3종 (케어플랜/빠른제작/합리적 비용)", async () => {
+    render(await HomePage());
     expect(screen.getByText("케어 플랜")).toBeInTheDocument();
     expect(screen.getByText("제작·광고·운영")).toBeInTheDocument();
     expect(screen.getByText("빠른제작")).toBeInTheDocument();
@@ -46,16 +53,16 @@ describe("메뉴얼 page1/2 — 홈 화면", () => {
     expect(screen.getByText("가성비+퀄리티")).toBeInTheDocument();
   });
 
-  it("케어 플랜 혜택 + 진행 흐름", () => {
-    render(<HomePage />);
+  it("케어 플랜 혜택 + 진행 흐름", async () => {
+    render(await HomePage());
     expect(screen.getByText("WEFLOW만의 케어 플랜 혜택")).toBeInTheDocument();
     expect(screen.getByText("24시간 상담대기")).toBeInTheDocument();
     expect(screen.getByText("고객의뢰")).toBeInTheDocument();
     expect(screen.getByText("3~7일 배송완료")).toBeInTheDocument();
   });
 
-  it("제작 진행 과정(4) + 6단계 프로세스 + 후기", () => {
-    render(<HomePage />);
+  it("제작 진행 과정(4) + 6단계 프로세스 + 후기", async () => {
+    render(await HomePage());
     expect(screen.getAllByText("제작 진행 과정").length).toBeGreaterThan(0);
     expect(screen.getByText("6단계 제작 프로세스")).toBeInTheDocument();
     expect(screen.getByText("실제 고객 후기")).toBeInTheDocument();
@@ -103,8 +110,8 @@ describe("메뉴얼 page8/9/10 — 제작플랜 & 가격안내", () => {
 });
 
 describe("메뉴얼 page7 — 성공사례", () => {
-  it("타이틀 + 업종 + 더보기", () => {
-    render(<CasesPage />);
+  it("타이틀 + 업종 + 더보기", async () => {
+    render(await CasesPage());
     expect(
       screen.getByRole("heading", { name: "다양한 업종의 성공 사례" }),
     ).toBeInTheDocument();

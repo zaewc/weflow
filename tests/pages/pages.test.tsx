@@ -1,5 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { CASES } from "@/lib/cases";
+
+// 페이지는 저장소에서 성공사례를 읽으므로 기본 시드로 모킹한다.
+vi.mock("@/lib/store", () => ({
+  listCases: vi.fn(async () => CASES),
+  getCase: vi.fn(async (slug: string) => CASES.find((c) => c.slug === slug) ?? null),
+}));
 
 import HomePage from "@/app/page";
 import ServicesPage from "@/app/services/page";
@@ -11,15 +18,12 @@ import LandingPage from "@/app/landing/page";
 import NotFound from "@/app/not-found";
 import PrivacyPage from "@/app/privacy/page";
 import TermsPage from "@/app/terms/page";
-import CaseDetailPage, {
-  generateStaticParams,
-  generateMetadata,
-} from "@/app/cases/[slug]/page";
+import CaseDetailPage, { generateMetadata } from "@/app/cases/[slug]/page";
 import RootLayout, { metadata, viewport } from "@/app/layout";
 
 describe("static pages render", () => {
-  it("home", () => {
-    render(<HomePage />);
+  it("home", async () => {
+    render(await HomePage());
     expect(screen.getAllByText(/문의로 이어지는/).length).toBeGreaterThan(0);
   });
   it("services", () => {
@@ -31,8 +35,8 @@ describe("static pages render", () => {
     expect(screen.getByText("제작플랜 & 가격안내")).toBeInTheDocument();
     expect(screen.getByText("안내 사항")).toBeInTheDocument();
   });
-  it("cases", () => {
-    render(<CasesPage />);
+  it("cases", async () => {
+    render(await CasesPage());
     expect(screen.getByText("다양한 업종의 성공 사례")).toBeInTheDocument();
   });
   it("diagnosis", () => {
@@ -62,31 +66,25 @@ describe("static pages render", () => {
 });
 
 describe("case detail page", () => {
-  it("lists static params for every case", () => {
-    const params = generateStaticParams();
-    expect(params.length).toBeGreaterThan(0);
-    expect(params[0]).toHaveProperty("slug");
-  });
-
-  it("builds metadata for a valid and invalid slug", () => {
-    expect(generateMetadata({ params: { slug: "pt" } }).title).toContain(
+  it("builds metadata for a valid and invalid slug", async () => {
+    expect((await generateMetadata({ params: { slug: "pt" } })).title).toContain(
       "성공사례",
     );
-    expect(generateMetadata({ params: { slug: "missing" } }).title).toBe(
+    expect((await generateMetadata({ params: { slug: "missing" } })).title).toBe(
       "성공사례 | WEFLOW",
     );
   });
 
-  it("renders a valid case", () => {
-    render(<CaseDetailPage params={{ slug: "pt" }} />);
+  it("renders a valid case", async () => {
+    render(await CaseDetailPage({ params: { slug: "pt" } }));
     expect(screen.getByText("OO PT샵")).toBeInTheDocument();
     expect(screen.getByText("진행 포인트")).toBeInTheDocument();
   });
 
-  it("calls notFound for an unknown slug", () => {
-    expect(() =>
-      render(<CaseDetailPage params={{ slug: "unknown" }} />),
-    ).toThrow("NEXT_NOT_FOUND");
+  it("calls notFound for an unknown slug", async () => {
+    await expect(
+      CaseDetailPage({ params: { slug: "unknown" } }),
+    ).rejects.toThrow("NEXT_NOT_FOUND");
   });
 });
 
