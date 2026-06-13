@@ -6,6 +6,7 @@ import type {
   Submission,
   SubmissionStatus,
 } from "@/lib/types";
+import { CASES, type CaseItem, type NewCase } from "@/lib/cases";
 
 // 저장소 전략:
 //  - Vercel(서버리스) 배포: Upstash Redis 사용 (영속).
@@ -14,6 +15,7 @@ import type {
 
 const SUBS_INDEX = "weflow:subs"; // sorted set (score = createdAt ms)
 const subKey = (id: string) => `weflow:sub:${id}`;
+const CASES_KEY = "weflow:cases"; // JSON 배열 (성공사례 전체)
 
 let cachedRedis: Redis | null | undefined;
 
@@ -50,6 +52,7 @@ function sortNewestFirst(items: Submission[]): Submission[] {
 // ---------------------------------------------------------------------------
 const DATA_DIR = path.join(process.cwd(), "data");
 const DATA_FILE = path.join(DATA_DIR, "submissions.json");
+const CASES_FILE = path.join(DATA_DIR, "cases.json");
 
 async function fileReadAll(): Promise<Submission[]> {
   try {
@@ -139,4 +142,73 @@ export async function deleteSubmission(id: string): Promise<boolean> {
     redis.del(subKey(id)),
   ]);
   return removed > 0;
+}
+
+// ---------------------------------------------------------------------------
+// 성공사례(CASE) 저장소 — 전체를 JSON 배열로 보관 (저장소 미기록 시 시드 주입)
+// ---------------------------------------------------------------------------
+async function readCasesRaw(): Promise<CaseItem[] | null> {
+  const redis = getRedis();
+  if (redis) {
+    return (await redis.get<CaseItem[]>(CASES_KEY)) ?? null;
+  }
+  try {
+    const raw = await fs.readFile(CASES_FILE, "utf-8");
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as CaseItem[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeCases(items: CaseItem[]): Promise<void> {
+  const redis = getRedis();
+  if (redis) {
+    await redis.set(CASES_KEY, items);
+    return;
+  }
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(CASES_FILE, JSON.stringify(items, null, 2), "utf-8");
+}
+
+export async function listCases(): Promise<CaseItem[]> {
+  const existing = await readCasesRaw();
+  // 한 번도 기록된 적 없으면 기본 시드를 주입 (이후 빈 배열도 그대로 존중)
+  if (existing !== null) return existing;
+  await writeCases(CASES);
+  return CASES;
+}
+
+export async function getCase(slug: string): Promise<CaseItem | null> {
+  const items = await listCases();
+  return items.find((c) => c.slug === slug) ?? null;
+}
+
+export async function createCase(input: NewCase): Promise<CaseItem> {
+  const items = await listCases();
+  const created: CaseItem = { ...input, slug: makeId() };
+  await writeCases([...items, created]);
+  return created;
+}
+
+export async function updateCase(
+  slug: string,
+  input: NewCase,
+): Promise<CaseItem | null> {
+  const items = await listCases();
+  const idx = items.findIndex((c) => c.slug === slug);
+  if (idx === -1) return null;
+  const updated: CaseItem = { ...input, slug };
+  const next = [...items];
+  next[idx] = updated;
+  await writeCases(next);
+  return updated;
+}
+
+export async function deleteCase(slug: string): Promise<boolean> {
+  const items = await listCases();
+  const next = items.filter((c) => c.slug !== slug);
+  if (next.length === items.length) return false;
+  await writeCases(next);
+  return true;
 }

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import CaseCard from "@/components/CaseCard";
 import PageHero from "@/components/PageHero";
-import { CASES } from "@/lib/cases";
+import { listCases } from "@/lib/store";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "성공사례 | WEFLOW",
@@ -21,7 +23,8 @@ const INDUSTRIES = [
   "수학학원", "입시학원", "개인과외", "청소업체",
 ];
 
-export default function CasesPage() {
+export default async function CasesPage() {
+  const cases = await listCases();
   return (
     <>
       <PageHero
@@ -32,7 +35,7 @@ export default function CasesPage() {
 
       <section className="container-w py-14">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {CASES.map((item) => (
+          {cases.map((item) => (
             <CaseCard key={item.slug} item={item} />
           ))}
         </div>

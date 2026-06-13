@@ -1,5 +1,12 @@
 // 성공사례 데이터 (메뉴얼 page 2 / 7 기준)
 // 외부 예시: https://weflow-ten.vercel.app/cases
+// 아래 CASES는 "기본 시드"이며, 실제 노출 데이터는 저장소(store)에서 관리한다.
+// 관리자 대시보드에서 추가/수정/삭제하면 저장소 값이 우선한다.
+
+export interface CaseMetric {
+  label: string;
+  value: string;
+}
 
 export interface CaseItem {
   slug: string;
@@ -11,8 +18,71 @@ export interface CaseItem {
   /** 대표 이미지 (public 경로) */
   image: string;
   /** 상세 지표 */
-  metrics: { label: string; value: string }[];
+  metrics: CaseMetric[];
   highlights: string[];
+}
+
+/** 신규/수정 입력 (slug는 저장소에서 발급) */
+export type NewCase = Omit<CaseItem, "slug">;
+
+export const DEFAULT_GRADIENT = "from-brand-500 to-brand-700";
+
+function asTrimmed(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+/**
+ * 관리자 입력(JSON)을 검증·정규화한다. 생성/수정 양쪽에서 사용.
+ * 상호명·업종·요약·이미지는 필수, 그 외는 선택(기본값 보정).
+ */
+export function parseCaseInput(raw: unknown): {
+  ok: boolean;
+  data?: NewCase;
+  error?: string;
+} {
+  if (typeof raw !== "object" || raw === null) {
+    return { ok: false, error: "잘못된 요청 형식입니다." };
+  }
+  const r = raw as Record<string, unknown>;
+  const name = asTrimmed(r.name);
+  const category = asTrimmed(r.category);
+  const summary = asTrimmed(r.summary);
+  const image = asTrimmed(r.image);
+
+  const required: Record<string, string> = {
+    상호명: name,
+    업종: category,
+    요약: summary,
+    이미지: image,
+  };
+  for (const [label, value] of Object.entries(required)) {
+    if (!value) return { ok: false, error: `${label}은(는) 필수입니다.` };
+  }
+
+  const gradient = asTrimmed(r.gradient) || DEFAULT_GRADIENT;
+
+  const metrics: CaseMetric[] = [];
+  if (Array.isArray(r.metrics)) {
+    for (const m of r.metrics) {
+      if (typeof m !== "object" || m === null) continue;
+      const label = asTrimmed((m as Record<string, unknown>).label);
+      const value = asTrimmed((m as Record<string, unknown>).value);
+      if (label && value) metrics.push({ label, value });
+    }
+  }
+
+  const highlights: string[] = [];
+  if (Array.isArray(r.highlights)) {
+    for (const h of r.highlights) {
+      const s = asTrimmed(h);
+      if (s) highlights.push(s);
+    }
+  }
+
+  return {
+    ok: true,
+    data: { name, category, summary, image, gradient, metrics, highlights },
+  };
 }
 
 export const CASES: CaseItem[] = [

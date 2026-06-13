@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import CaseCard from "@/components/CaseCard";
-import { CASES } from "@/lib/cases";
+import type { CaseItem } from "@/lib/cases";
 
 // 성공사례 — 왼쪽 안내 박스 + 오른쪽 카드 그리드 (메뉴얼 page 2)
-const FEATURED = CASES.slice(0, 6);
-
-export default function SuccessShowcase() {
+// 노출 데이터는 상위(서버 컴포넌트)에서 저장소를 읽어 props로 전달한다.
+export default function SuccessShowcase({ cases }: { cases: CaseItem[] }) {
+  const featured = cases.slice(0, 6);
   return (
     <section className="bg-slate-50 py-20">
       <div className="container-w">
@@ -54,7 +54,7 @@ export default function SuccessShowcase() {
 
           {/* 오른쪽 카드 그리드 */}
           <div className="grid grid-cols-2 gap-4 lg:col-span-8 lg:grid-cols-3">
-            {FEATURED.map((item) => (
+            {featured.map((item) => (
               <CaseCard key={item.slug} item={item} />
             ))}
           </div>

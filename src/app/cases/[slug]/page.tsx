@@ -3,18 +3,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
-import { CASES } from "@/lib/cases";
+import { getCase } from "@/lib/store";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  return CASES.map((c) => ({ slug: c.slug }));
-}
-
-export function generateMetadata({ params }: Props): Metadata {
-  const item = CASES.find((c) => c.slug === params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const item = await getCase(params.slug);
   if (!item) return { title: "성공사례 | WEFLOW" };
   return {
     title: `${item.name} 성공사례 | WEFLOW`,
@@ -22,8 +20,8 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function CaseDetailPage({ params }: Props) {
-  const item = CASES.find((c) => c.slug === params.slug);
+export default async function CaseDetailPage({ params }: Props) {
+  const item = await getCase(params.slug);
   if (!item) notFound();
 
   return (
