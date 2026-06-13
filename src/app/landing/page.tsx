@@ -77,7 +77,7 @@ export default function LandingPage() {
               <Link href="/diagnosis" className="btn-primary">
                 무료 진단 후 견적받기 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/cases" className="btn-ghost">
+              <Link href="/diagnosis" className="btn-ghost">
                 실제 제작 성공 보기
               </Link>
             </div>
