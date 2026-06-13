@@ -7,7 +7,7 @@ import { CASES } from "@/lib/cases";
 const mem = vi.hoisted(() => ({
   // file 백엔드 (접수 / 성공사례 별도 파일)
   file: { content: null as string | null },
-  casesFile: { content: null as string | null },
+  casesFile: { content: null as string | null, writeThrows: false },
   // redis 백엔드
   hashes: new Map<string, Record<string, unknown>>(),
   zset: [] as { score: number; member: string }[],
@@ -24,6 +24,9 @@ vi.mock("fs", () => {
       return slot.content;
     }),
     writeFile: vi.fn(async (p: string, data: string) => {
+      if (p.includes("cases.json") && mem.casesFile.writeThrows) {
+        throw new Error("EROFS: read-only file system");
+      }
       slotFor(p).content = data;
     }),
     mkdir: vi.fn(async () => undefined),
@@ -108,6 +111,7 @@ async function freshStore() {
 beforeEach(() => {
   mem.file.content = null;
   mem.casesFile.content = null;
+  mem.casesFile.writeThrows = false;
   mem.hashes.clear();
   mem.zset = [];
   mem.kv.clear();
@@ -215,6 +219,14 @@ describe("cases store (file backend)", () => {
     mem.casesFile.content = JSON.stringify({ not: "array" });
     const store = await freshStore();
     expect(await store.listCases()).toHaveLength(CASES.length);
+  });
+
+  it("returns defaults even when the seed write fails (read-only FS)", async () => {
+    mem.casesFile.writeThrows = true;
+    const store = await freshStore();
+    // 쓰기 실패해도 예외 없이 기본 시드 반환
+    expect(await store.listCases()).toHaveLength(CASES.length);
+    expect(mem.casesFile.content).toBeNull();
   });
 
   it("respects a stored empty array (no reseed)", async () => {

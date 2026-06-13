@@ -175,7 +175,13 @@ export async function listCases(): Promise<CaseItem[]> {
   const existing = await readCasesRaw();
   // 한 번도 기록된 적 없으면 기본 시드를 주입 (이후 빈 배열도 그대로 존중)
   if (existing !== null) return existing;
-  await writeCases(CASES);
+  // 읽기 전용 FS(예: Redis 미설정 Vercel)에서는 시드 기록이 실패할 수 있다.
+  // 공개 페이지가 죽지 않도록 기록은 best-effort로 처리하고 기본값을 반환한다.
+  try {
+    await writeCases(CASES);
+  } catch {
+    /* 영속화 불가 — 기본 시드를 그대로 사용 */
+  }
   return CASES;
 }
 
